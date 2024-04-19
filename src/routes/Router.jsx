@@ -1,5 +1,5 @@
 import { Route, Routes, Navigate } from "react-router-dom";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Home from "../pages/Home";
 import Open from "../pages/Open";
 import Close from "../pages/Close";
@@ -15,124 +15,171 @@ import AddTeam from "../pages/AddTeam";
 import Alert from "../pages/Alert";
 import Login from "../pages/login";
 import AddChecklist from "../pages/AddChecklist";
+import { getAuthentication, setAuth } from "../reducer/AuthSlice";
+import { useState, useEffect } from "react";
+
 
 const Router = () => {
     const dispatch = useDispatch();
+    const authentication = useSelector(getAuthentication);
+    // let token = localStorage.getItem("token");
+    const [token, setToken] = useState(localStorage.getItem("token"));
+
+    useEffect(() => {
+        const storedToken = localStorage.getItem("token");
+        setToken(storedToken);
+        if (token) {
+            dispatch(setAuth({ authentication: true }));
+        }
+    }, [authentication]);
 
     return (
         <Routes>
-            <Route path="/" element={<Navigate to="/home" />} />
-            
             <Route
                 path="/login"
                 element={
-                    <Login />
+                    token ? <Navigate to="/home" /> : <Login />
+                }
+            />
+            <Route
+                path="/"
+                element={
+                    token ? <Navigate to="/home" /> : <Navigate to="/login" />
                 }
             />
             <Route
                 path="/home"
                 element={
-                    <MainLayout layout="home">
-                        <Home />
-                    </MainLayout>
+                    token ? (
+                        <MainLayout layout="home">
+                            <Home />
+                        </MainLayout>
+                    ) : (<Navigate to="/login" />)
                 }
             />
             <Route
                 path="/open"
                 element={
-                    <MainLayout layout="open">
-                        <Open />
-                    </MainLayout>
+                    token ? (
+                        <MainLayout layout="open">
+                            <Open />
+                        </MainLayout>
+                    ) : (<Navigate to="/login" />)
                 }
             />
             <Route
                 path="/addchecklist"
                 element={
-                    <MainLayout layout="open">
-                        <AddChecklist />
-                    </MainLayout>
+                    token ? (
+                        <MainLayout layout="open">
+                            <AddChecklist />
+                        </MainLayout>
+                    ) : (<Navigate to="/login" />)
                 }
             />
             <Route
                 path="/close"
                 element={
-                    <MainLayout layout="close">
-                        <Close />
-                    </MainLayout>
+                    token ? (
+                        <MainLayout layout="close">
+                            <Close />
+                        </MainLayout>
+                    ) : (<Navigate to="/login" />)
                 }
             />
             <Route
                 path="/temperatures"
                 element={
-                    <MainLayout layout="temperatures">
-                        <Temperatures />
-                    </MainLayout>
+                    token ? (
+                        <MainLayout layout="temperatures">
+                            <Temperatures />
+                        </MainLayout>
+                    ) : (<Navigate to="/login" />)
                 }
             />
             <Route
                 path="/alert"
                 element={
-                    <MainLayout layout="temperatures">
-                        <Alert />
-                    </MainLayout>
+                    token ? (
+                        <MainLayout layout="temperatures">
+                            <Alert />
+                        </MainLayout>
+                    ) : (<Navigate to="/login" />)
                 }
             />
             <Route
                 path="/team"
                 element={
-                    <MainLayout layout="team">
-                        <Team />
-                    </MainLayout>
+                    token ? (
+                        <MainLayout layout="team">
+                            <Team />
+                        </MainLayout>
+                    ) : (<Navigate to="/login" />)
                 }
             />
             <Route
                 path="/addteam"
                 element={
-                    <MainLayout layout="team">
-                        <AddTeam />
-                    </MainLayout>
+                    token ? (
+                        <MainLayout layout="team">
+                            <AddTeam />
+                        </MainLayout>
+                    ) : (<Navigate to="/login" />)
                 }
             />
             <Route
                 path="/information"
                 element={
-                    <MainLayout layout="information">
-                        <Information />
-                    </MainLayout>
+                    token ? (
+                        <MainLayout layout="information">
+                            <Information />
+                        </MainLayout>
+                    ) : (<Navigate to="/login" />)
                 }
             />
             <Route
                 path="/incidents"
                 element={
-                    <MainLayout layout="incidents">
-                        <Incidents />
-                    </MainLayout>
+                    token ? (
+                        <MainLayout layout="incidents">
+                            <Incidents />
+                        </MainLayout>
+                    ) : (<Navigate to="/login" />)
                 }
             />
             <Route
                 path="/reports"
                 element={
-                    <MainLayout layout="reports">
-                        <Reports />
-                    </MainLayout>
+                    token ? (
+                        <MainLayout layout="reports">
+                            <Reports />
+                        </MainLayout>
+                    ) : (<Navigate to="/login" />)
                 }
             />
             <Route
                 path="/allergy"
                 element={
-                    <MainLayout layout="allergy">
-                        <Allergy />
-                    </MainLayout>
+                    token ? (
+                        <MainLayout layout="allergy">
+                            <Allergy />
+                        </MainLayout>
+                    ) : (<Navigate to="/login" />)
                 }
             />
             <Route
                 path="/settings"
                 element={
-                    <MainLayout layout="settings">
-                        <Settings />
-                    </MainLayout>
+                    token ? (
+                        <MainLayout layout="settings">
+                            <Settings />
+                        </MainLayout>
+                    ) : (<Navigate to="/login" />)
                 }
             />
+
+
+
         </Routes>
     )
 }

@@ -1,18 +1,26 @@
 import { useState } from 'react'
 import Button from '../components/Button';
 import logoImage from '../assets/guardstar_logo.jpg'
+import { useDispatch } from 'react-redux';
+import { SignIn } from '../action/team';
+import {  useNavigate } from 'react-router-dom';
 
 
 const Login = () => {
-
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const login = () => {
+    const login =async () => {
         const data = {
             "username" : username,
             "password" : password
         }
-        console.log(data,' data')
+        const response = await dispatch(SignIn(data));
+        if(response) {
+            console.log("hello");
+            navigate("/home");
+        }
     }
 
     return (

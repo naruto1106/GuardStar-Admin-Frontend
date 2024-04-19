@@ -17,7 +17,7 @@ const Reports = () => {
             <div className="mt-[100px]">
                 <h2 className="text-[24px]  font-bold">Select your report frequency</h2>
                 <p className="mt-5">Please choose the report range below</p>
-                <div className="w-full mt-5">
+                {/* <div className="w-full mt-5">
                     <label htmlFor="timePeriod" className="block font-bold text-sm  leading-6 text-gray-900">
                         Time period
                     </label>
@@ -33,8 +33,8 @@ const Reports = () => {
                             <option>2</option>
                         </select>
                     </div>
-                </div>
-                <div className="flex w-[800px] gap-2 justify-between mt-5">
+                </div> */}
+                <div className="flex w-[600px] gap-2 justify-between mt-5">
                     <div className="w-1/2">
                         <label htmlFor="timePeriod" className="block text-sm font-bold leading-6 text-gray-900">
                             Start Date
@@ -66,7 +66,7 @@ const Reports = () => {
                         </div>
                     </div>
                 </div>
-                <div className="mt-5">
+                <div className="mt-5 w-[600px]">
                     <h3 className="text-[20px] font-bold">What the report will contain:</h3>
                     <hr className="mt-3" />
                     <p className="mt-3">Opening Checks</p>
