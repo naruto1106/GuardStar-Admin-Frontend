@@ -1,17 +1,16 @@
 import { configureStore } from "@reduxjs/toolkit";
 
 import AuthSlice from "./AuthSlice";
-// import AuthenticationSlice from "./AuthenticationSlice";
-// import CategorySlice from "./CategorySlice";
-// import ServiceSlice from "./ServiceSlice";
-// import StaffSlice from "./StaffSlice";
+import ChecklistSlice from "./ChecklistSlice";
+import TeamSlice from "./TeamSlice";
+
 
 export default configureStore({
   reducer: {
     auth: AuthSlice,
+    openingchecklist: ChecklistSlice,
+    team : TeamSlice
     // authentication: AuthenticationSlice,
-    // categories: CategorySlice,
-    // services: ServiceSlice,
-    // staffs: StaffSlice
+    
   }
 });

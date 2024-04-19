@@ -2,9 +2,12 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom";
 import Button from "../components/Button"
+import { useDispatch } from "react-redux";
+import { createTeam } from "../action/team";
 
 const AddTeam = () => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [name, setName] = useState("");
     const [DOB, setDOB] = useState(new Date().toISOString().slice(0, 10));
     const [email, setEmail] = useState("");
@@ -20,19 +23,26 @@ const AddTeam = () => {
     const handleAllergyChange = (e) => {
         setAllergy(e.target.value);
     };
-    const AddNewMember = () => {
+    const AddNewMember =async () => {
         const data = {
             "name" : name,
-            "DOB" : DOB,
+            "birthday" : DOB,
             "email" : email,
-            "phoneNumber" : phoneNumber,
+            "mobile" : phoneNumber,
             "userLevel" : userLevel,
             "trainingLevel" : trainingLevel,
-            "hygiene" : hygiene,
-            "allergy" : allergy,
+            "hygieneTraining" : hygiene,
+            "allergenTraining" : allergy,
+            "role" : "Team"
         }
         console.log(data, 'data');
-        navigate("/team")
+        const teamData = await dispatch(createTeam(data));
+        // Assuming teamData contains the newly created team information
+        if (teamData) {
+            navigate('/team'); // Navigate to the team page upon successful creation
+        }
+            
+        
 
     }
 

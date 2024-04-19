@@ -14,6 +14,7 @@ import MainLayout from "../layouts/MainLayout";
 import AddTeam from "../pages/AddTeam";
 import Alert from "../pages/Alert";
 import Login from "../pages/login";
+import AddChecklist from "../pages/AddChecklist";
 
 const Router = () => {
     const dispatch = useDispatch();
@@ -41,6 +42,14 @@ const Router = () => {
                 element={
                     <MainLayout layout="open">
                         <Open />
+                    </MainLayout>
+                }
+            />
+            <Route
+                path="/addchecklist"
+                element={
+                    <MainLayout layout="open">
+                        <AddChecklist />
                     </MainLayout>
                 }
             />

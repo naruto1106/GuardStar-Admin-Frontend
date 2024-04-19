@@ -1,9 +1,24 @@
 
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
-
+import { useDispatch, useSelector } from "react-redux";
+import { getTeamlists } from "../action/team";
+import { getTeamlist } from "../reducer/TeamSlice";
 const Team = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const teamlists = useSelector(getTeamlist);
+    const [team, setTeam] = useState([]);
+    useEffect(()=>{
+        if(teamlists.length > 0) {
+            setTeam(teamlists);
+        }
+    },[teamlists])
+    useEffect(() => {
+        dispatch(getTeamlists())
+    }, [])
+
     const GotoAddTeam = () => {
         navigate("/addteam");
     }
@@ -20,30 +35,17 @@ const Team = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td className="p-4 pl-[0px] text-left">Ronnie Luke</td>
-                        <td className="p-4  text-center">Manager</td>
-                        <td className="p-4  text-center">ronnieluke@topwork.com</td>
-                        <td className="p-4  text-center">Level3</td>
-                    </tr>
-                    <tr>
-                        <td className="p-4 pl-[0px] text-left">Ronnie Luke</td>
-                        <td className="p-4  text-center">Manager</td>
-                        <td className="p-4  text-center">ronnieluke@topwork.com</td>
-                        <td className="p-4  text-center">Level3</td>
-                    </tr>
-                    <tr>
-                        <td className="p-4 pl-[0px] text-left">Ronnie Luke</td>
-                        <td className="p-4  text-center">Manager</td>
-                        <td className="p-4  text-center">ronnieluke@topwork.com</td>
-                        <td className="p-4  text-center">Level3</td>
-                    </tr>
-                    <tr>
-                        <td className="p-4 pl-[0px] text-left">Ronnie Luke</td>
-                        <td className="p-4 text-center">Manager</td>
-                        <td className="p-4  text-center">ronnieluke@topwork.com</td>
-                        <td className="p-4 text-center">Level3</td>
-                    </tr>
+                    {
+                        team.length > 0 && team.map((item, index) => (
+                            <tr key={index}>
+                                <td className="p-4 pl-[0px] text-left"> {item.name} </td>
+                                <td className="p-4  text-center"> {item.role} </td>
+                                <td className="p-4  text-center"> {item.email} </td>
+                                <td className="p-4  text-center"> {item.trainingLevel} </td>
+                            </tr>
+                        ))
+                    }
+
                 </tbody>
             </table>
             <div className="flex justify-center mt-[150px]">

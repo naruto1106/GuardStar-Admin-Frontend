@@ -35,7 +35,7 @@ const Incidents = () => {
                         id="incident"
                         name="incident"
                         rows={4}
-                        className="block w-[700px] rounded-md border-0 p-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        className="block w-[500px] rounded-md border-0 p-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         value={incident}
                         onChange={(e) => changeIncident(e)}
                     />
@@ -48,7 +48,7 @@ const Incidents = () => {
                         id="resolution"
                         name="resolution"
                         rows={4}
-                        className="block w-[700px] rounded-md border-0 p-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        className="block w-[500px] rounded-md border-0 p-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         value={resolution}
                         onChange={(e) => changeResolution(e)}
                     />
@@ -61,13 +61,12 @@ const Incidents = () => {
                         id="employeeName"
                         name="employeeName"
                         type = "text"
-                        rows={4}
-                        className="block w-[700px] rounded-md border-0 p-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        className="block w-[500px] rounded-md border-0 p-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         value={employeeName}
                         onChange={(e) => setEmployeeName(e.target.value)}
                     />
                 </div>
-                <div className="mt-8 text-center w-[700px]">
+                <div className="mt-8 text-center w-[500px]">
                     <label htmlFor="employeeName" className="block uppercase font-medium leading-6 text-gray-900">
                         Date and Time will be automatically recorded
                     </label>

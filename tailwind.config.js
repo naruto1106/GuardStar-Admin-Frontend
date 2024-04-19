@@ -13,7 +13,8 @@ module.exports = {
         closingCheck: "#E8E8E8",
         clickFill: "#FDD8DB",
         green: "#00FF04",
-        grey: "#F2F2F2"
+        grey: "#F2F2F2",
+        greenSwitch : "#13ae77"
       }
     },
   },
