@@ -27,6 +27,56 @@ export const getOpeninglist = () => {
       }
     }
 }
+export const getOpeningCheckStatus = () => {
+  return async () => {
+    try {
+      // Make API request to register the user
+      const response = await fetch(
+        `${APIURL}/checklist/getOpeningCheckStatus`,
+        {
+          method: "GET",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+     
+      if (!response.ok) {
+        throw new Error('Failed to categories');
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      // Dispatch failure action if there's an error
+      console.log(error, 'error');
+    }
+  }
+}
+export const getClosingCheckStatus = () => {
+  return async () => {
+    try {
+      // Make API request to register the user
+      const response = await fetch(
+        `${APIURL}/checklist/getClosingCheckStatus`,
+        {
+          method: "GET",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+     
+      if (!response.ok) {
+        throw new Error('Failed to categories');
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      // Dispatch failure action if there's an error
+      console.log(error, 'error');
+    }
+  }
+}
 
   
 export const createChecklist = (createData) => {
@@ -162,3 +212,29 @@ export const updateClosingChecklist = (updateData) => {
       }
     }
   }
+
+    
+export const getDownload = (Data) => {
+  return async () => {
+    try {
+      // Make API request to register the user
+      const response = await fetch(
+        `${APIURL}/app/download`,
+        {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(Data)
+        }
+      );
+      
+      const data = await response.json();
+      return data;
+
+    } catch (error) {
+      // Dispatch failure action if there's an error
+      toast.error("Failed Server connection");
+    }
+  }
+}

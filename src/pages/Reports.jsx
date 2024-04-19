@@ -1,13 +1,52 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import { getDownload } from "../action/checklist";
 
 
 const Reports = () => {
+    const dispatch = useDispatch();
 
     const [startDate, setStartDate] = useState(new Date().toISOString().slice(0, 10));
     const [endDate, setEndDate] = useState(new Date().toISOString().slice(0, 10));
     
-    const download = () => {
-        // console.log(data,'kkk');
+    const download =async () => {
+        if (startDate > endDate) {
+            toast.error("End Date must be greater than Start Date");
+            return;
+        }
+        const data = {
+            "startDate" : startDate,
+            "endDate" : endDate
+        }
+        const response = await dispatch(getDownload(data));
+        const { Checklists, incidentlists } = response;
+
+    // Combine checklists and incidents into a single array
+    const combinedData = [...Checklists, ...incidentlists];
+
+    // Group data by date
+    const groupedByDate = combinedData.reduce((result, item) => {
+        const itemDate = item.date.slice(0, 10); // Extract YYYY-MM-DD from date string
+
+        if (!result[itemDate]) {
+            result[itemDate] = { date: itemDate, checklists: [], incidents: [] };
+        }
+
+        if ('checkType' in item && item.checkType === 'open' || item.checkType === 'close') {
+            result[itemDate].checklists.push(item);
+        } else {
+            result[itemDate].incidents.push(item);
+        }
+
+        return result;
+    }, {});
+
+    // Convert groupedByDate object into an array of date groups
+    const downloadData = Object.values(groupedByDate);
+
+    console.log(response,'kkk');
+    console.log(downloadData, 'rearrangedData');
     }
    
    

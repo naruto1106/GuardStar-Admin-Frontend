@@ -2,32 +2,36 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { getClosingChecklist, getOpeningChecklist } from "../reducer/ChecklistSlice";
-import { getClosinglist, getOpeninglist } from "../action/checklist";
+import { getClosingCheckStatus, getOpeningCheckStatus } from "../action/checklist";
 const Home = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const getOpeningCheck = useSelector(getOpeningChecklist);
-    const getClosingCheck = useSelector(getClosingChecklist);
+    
     const [checkOpening, setCheckOpening] = useState(false);
     const [checkClosing, setCheckClosing] = useState(false);
-    useEffect(()=>{
-        // Check if getOpeningCheck is an array before using every()
-        if (Array.isArray(getOpeningCheck)) {
-            const allStatusTrue = getOpeningCheck.every(item => item.status === true);
-            setCheckOpening(allStatusTrue);
-        }  
-        if (Array.isArray(getClosingCheck)) {
-            const allStatusTrue1 = getClosingCheck.every(item => item.status === true);
-            setCheckClosing(allStatusTrue1);
-        }  
-    },[getOpeningCheck,getClosingCheck])
-   
-    useEffect(()=>{
-        dispatch(getOpeninglist())
-        dispatch(getClosinglist())
+    
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Dispatch the first async action and wait for it to complete
+                const OpeningStatus = await dispatch(getOpeningCheckStatus());
+
+                // Dispatch the second async action and wait for it to complete
+                const ClosingStatus = await dispatch(getClosingCheckStatus());
+
+                // Any code you want to run after both actions have completed
+                setCheckOpening(OpeningStatus);
+                setCheckClosing(ClosingStatus);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        // Call the async function defined inside useEffect
+        fetchData();
     },[])
 
     const gotoOpen = () => {
@@ -38,7 +42,7 @@ const Home = () => {
     }
     return (
         <>
-            <div className="flex justify-center">
+             <div className="flex justify-center">
                 <div className="w-[550px] flex justify-between">
                     <Button 
                         size="normal" 
