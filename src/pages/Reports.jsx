@@ -7,7 +7,7 @@ const Reports = () => {
     const [endDate, setEndDate] = useState(new Date().toISOString().slice(0, 10));
     
     const download = () => {
-        console.log(data,'kkk');
+        // console.log(data,'kkk');
     }
    
    
