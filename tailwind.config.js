@@ -14,7 +14,9 @@ module.exports = {
         clickFill: "#FDD8DB",
         green: "#00FF04",
         grey: "#F2F2F2",
-        greenSwitch : "#13ae77"
+        greenSwitch : "#13ae77",
+        pdfGray : "#E9EDF6",
+        pdfGreen : "#81B532"
       }
     },
   },

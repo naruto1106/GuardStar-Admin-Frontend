@@ -17,6 +17,7 @@ import Login from "../pages/login";
 import AddChecklist from "../pages/AddChecklist";
 import { getAuthentication, setAuth } from "../reducer/AuthSlice";
 import { useState, useEffect } from "react";
+import EditChecklist from "../pages/EditChecklist";
 
 
 const Router = () => {
@@ -73,6 +74,16 @@ const Router = () => {
                     token ? (
                         <MainLayout layout="open">
                             <AddChecklist />
+                        </MainLayout>
+                    ) : (<Navigate to="/login" />)
+                }
+            />
+            <Route
+                path="/editchecklist/:checkType/:id"
+                element={
+                    token ? (
+                        <MainLayout layout="">
+                            <EditChecklist />
                         </MainLayout>
                     ) : (<Navigate to="/login" />)
                 }

@@ -24,17 +24,17 @@ const MainLayout = (props) => {
                     <li className={`py-4 cursor-pointer ${layout == 'team' ? 'text-yellowFont' : ''} `}>
                         <a href="/team">  Team </a>
                     </li>
-                    <li className={`py-4 cursor-pointer ${layout == 'information' ? 'text-yellowFont' : ''} `}>
+                    {/* <li className={`py-4 cursor-pointer ${layout == 'information' ? 'text-yellowFont' : ''} `}>
                         <a href="/information"> Information </a>
-                    </li>
+                    </li> */}
                     <li className={`py-4 cursor-pointer ${layout == 'incidents' ? 'text-yellowFont' : ''} `}>
                         <a href="/incidents"> Incidents </a> </li>
                     <li className={`py-4 cursor-pointer ${layout == 'reports' ? 'text-yellowFont' : ''} `}>
                         <a href="/reports"> Reports </a>
                     </li>
-                    <li className={`py-4 cursor-pointer ${layout == 'allergy' ? 'text-yellowFont' : ''} `}>
+                    {/* <li className={`py-4 cursor-pointer ${layout == 'allergy' ? 'text-yellowFont' : ''} `}>
                         <a href="/allergy"> Allergy Check </a>
-                    </li>
+                    </li> */}
                     <li className={`py-4 cursor-pointer ${layout == 'settings' ? 'text-yellowFont' : ''} `}>
                         <a href="/settings"> Settings </a>
                     </li>

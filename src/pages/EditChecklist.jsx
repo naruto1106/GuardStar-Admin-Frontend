@@ -1,27 +1,27 @@
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react"
+
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useLocation } from "react-router-dom";
+
+import { getEditChecklist } from "../action/checklist";
+
 import { getCheckType } from "../reducer/ChecklistSlice";
 import ButtonCheck from "../components/ButtonCheck";
 import { Switch } from '@headlessui/react';
 import { Icon } from '@iconify-icon/react';
-import { createChecklist } from "../action/checklist";
+import { updateChecklist } from "../action/checklist";
 import { toast } from 'react-toastify';
 
-const AddChecklist = () => {
-  const dispatch = useDispatch();
+
+
+
+const EditChecklist = () => {
+  const { id, checkType } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const checkType = queryParams.get('checkType');
-  const [userId, setUserId] = useState('');
-
-  useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem('user'));
-    setUserId(userData._id)
-  }, [])
-
+  const dispatch = useDispatch();
+  
+  // const [editList, setEditList] = useState([]);
   const [enableName, setEnabledName] = useState(false);
   const [name, setName] = useState("");
   const [enableDate, setEnabledDate] = useState(false);
@@ -31,6 +31,71 @@ const AddChecklist = () => {
   const [title, setTitle] = useState("");
   const [addUserText, setAddUserText] = useState([]);
   const [checkSection, setCheckSection] = useState([]);
+  
+  useEffect(()=> {
+    const fetchData = async() => {
+      const response = await dispatch(getEditChecklist(id));
+      console.log(response, 'response');
+      if(response) {
+        setEnabledName(response[0].enableName);
+        setName(response[0].name);
+        setEnabledDate(response[0].enableDate);
+        setEnabledFridge(response[0].enableFridge);
+        setFridgeSection(response[0].fridge);
+        setEnabledTextBox(response[0].enableTextBox);
+        setTitle(response[0].title);
+        setAddUserText(response[0].textBox);
+        setCheckSection(response[0].checkSection);
+      }
+      // setEditList(response);
+    }
+    fetchData()
+        
+  }, [])
+
+  const addSection = () => {
+    setCheckSection([...checkSection, '']);
+  };
+
+  const handleTextareaChange = (index, value) => {
+    const updatedSections = [...checkSection];
+    updatedSections[index] = value;
+    setCheckSection(updatedSections);
+  };
+
+  const removeSection = (index) => {
+    const updatedSections = [...checkSection];
+    updatedSections.splice(index, 1); // Remove the element at the specified index
+    setCheckSection(updatedSections);
+  };
+
+  const addUserTextBox = () => {
+    setAddUserText([...addUserText, '']);
+  };
+
+  const handleAddUserTextChange = (index, key, newValue) => {
+    const updatedAddUserText = [...addUserText];
+    let data = {
+      [key]: newValue
+    }
+    updatedAddUserText[index] = data
+    setAddUserText(updatedAddUserText);
+  };
+
+
+  const removeAddUserText = (index) => {
+    const updatedAddUserText = [...addUserText];
+    updatedAddUserText.splice(index, 1); // Remove the element at the specified index
+    setAddUserText(updatedAddUserText);
+  };
+
+  const handleCancel = () => {
+    if (checkType == 'open') {
+      navigate("/open");
+    } else {
+      navigate("/close")
+    }
+  }
 
   const handleSave = async () => {
 
@@ -71,13 +136,12 @@ const AddChecklist = () => {
       'title': title,
       'checkSection': checkSection,
       'name': name,
-      'Type': checkType,
-      'userId': userId,
+      'id': id,
       'addUserText': addUserText,
       'fridgeSection':fridgeSection
     }
     console.log(data, 'data');
-    const response = await dispatch(createChecklist(data));
+    const response = await dispatch(updateChecklist(data));
 
     setEnabledName(false);
     setEnabledDate(false);
@@ -93,55 +157,13 @@ const AddChecklist = () => {
       }
     }
   }
-  const handleCancel = () => {
-    if (checkType == 'open') {
-      navigate("/open");
-    } else {
-      navigate("/close")
-    }
-  }
-  const addSection = () => {
-    setCheckSection([...checkSection, '']);
-  };
 
-  const handleTextareaChange = (index, value) => {
-    const updatedSections = [...checkSection];
-    updatedSections[index] = value;
-    setCheckSection(updatedSections);
-  };
-
-  const removeSection = (index) => {
-    const updatedSections = [...checkSection];
-    updatedSections.splice(index, 1); // Remove the element at the specified index
-    setCheckSection(updatedSections);
-  };
-
-  const addUserTextBox = () => {
-    setAddUserText([...addUserText, '']);
-  };
-
-  const handleAddUserTextChange = (index, key, newValue) => {
-    const updatedAddUserText = [...addUserText];
-    let data = {
-      [key]: newValue
-    }
-    updatedAddUserText[index] = data
-    setAddUserText(updatedAddUserText);
-  };
-
-
-  const removeAddUserText = (index) => {
-    const updatedAddUserText = [...addUserText];
-    updatedAddUserText.splice(index, 1); // Remove the element at the specified index
-    setAddUserText(updatedAddUserText);
-  };
 
   return (
     <>
-      <div className="mt-[20px] flex justify-between pb-5 items-center border-b-2 border-grey">
+       <div className="mt-[20px] flex justify-between pb-5 items-center border-b-2 border-grey">
         <div >
-          <h2 className="font-bold text-[25px] uppercase"> {checkType == 'open' ? 'Opening' : 'Closing'} Checklist</h2>
-
+          <h2 className="font-bold text-[25px] uppercase"> Edit Checklist</h2>
         </div>
         <div>
           <ButtonCheck handleClick={() => handleCancel()} color="secondary" variant="secondary" label="Cancel" />
@@ -266,7 +288,7 @@ const AddChecklist = () => {
                 <ButtonCheck handleClick={() => addUserTextBox()} color="secondary" variant="secondary" label="Add User Textbox" />
               </div>
               <div className="my-5 ">
-                {addUserText.map((item, index) => {
+                { addUserText && addUserText.map((item, index) => {
                   const key = Object.keys(item)[0] || ''; // Get the key dynamically
                   const value = item[key] || ''; // Initialize value with an empty string if undefined
                   return (
@@ -296,7 +318,7 @@ const AddChecklist = () => {
           <ButtonCheck handleClick={() => addSection()} color="secondary" variant="secondary" label="Add Section to checklist" />
         </div>
         <div className="my-5 ">
-          {checkSection.map((value, index) => (
+          {checkSection && checkSection.map((value, index) => (
             <div className="mt-2 flex justify-between items-center" key={index}>
               <textarea
                 id={`incident${index}`}
@@ -317,9 +339,8 @@ const AddChecklist = () => {
 
 
       </div>
-
     </>
   )
 }
 
-export default AddChecklist;
+export default EditChecklist

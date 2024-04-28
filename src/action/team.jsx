@@ -92,3 +92,60 @@ export const SignIn = (loginData) => {
     }
   }
 }
+
+export const getIncident = (userId) => {
+  return async (dispatch) => {
+    try {
+      // Make API request to register the user
+      const response = await fetch(
+        `${APIURL}/incident/getIncident?userId=${userId}`,
+        {
+          method: "GET",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+     
+      if (!response.ok) {
+        throw new Error('Failed to categories');
+      }
+      const data = await response.json();
+      dispatch(setTeamlist({ incidentList : data }))
+      return data;
+    } catch (error) {
+      // Dispatch failure action if there's an error
+      console.log(error, 'error');
+    }
+  }
+}
+
+
+export const addIncident = (createData) => {
+  return async () => {
+    try {
+      // Make API request to register the user
+      const response = await fetch(
+        `${APIURL}/incident/addIncident`,
+        {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(createData)
+        }
+      );
+      if (!response.ok) {
+        throw new Error('Failed to register');
+      }
+      const data = await response.json();
+      // Dispatch success action if the request is successful
+      toast.success('Successfully created!');
+      return data;
+
+    } catch (error) {
+      // Dispatch failure action if there's an error
+      toast.error("Failed created");
+    }
+  }
+}
