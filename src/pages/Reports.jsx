@@ -2,16 +2,9 @@ import { useState, useRef, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { getDownload } from "../action/checklist";
-import generatePDF from "react-to-pdf";
-import logoImage from '../assets/guardstar_logo.jpg'
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
-import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
-
 
 const Reports = () => {
   const dispatch = useDispatch();
-  const pdfRef = useRef(null);
   const [startDate, setStartDate] = useState(new Date().toISOString().slice(0, 10));
   const [endDate, setEndDate] = useState(new Date().toISOString().slice(0, 10));
   const [userId, setUserId] = useState("");
@@ -35,8 +28,6 @@ const Reports = () => {
     const response = await dispatch(getDownload(data));
 
     // Create a Blob from the base64 string
-    
-
     const filename = 'Report.pdf';
     const blob = new Blob([response], { type: 'application/pdf' });
     const link = document.createElement('a');
@@ -44,9 +35,6 @@ const Reports = () => {
     link.download = filename;
     link.click();
     link.remove();
-
-
-
 
     console.log(response, 'kkk');
 
