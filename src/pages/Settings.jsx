@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TimezoneSelect from 'react-timezone-select'
 import Button from "../components/Button";
+import { useDispatch } from "react-redux";
+import { getSettingData, updateSetting } from "../action/checklist";
 
 
 const Settings = () => {
-
+    const dispatch = useDispatch();
     // const [timezone, setTimeZone] = useState("");
     const [metric, setMetric] = useState("");
+    const [userId, setUserId] = useState("");
     const [adminEmail, setAdminEmail] = useState("");
     const [adminPhone, setAdminPhone] = useState("");
     const [openingTime, setOpeningTime] = useState("");
@@ -15,18 +18,92 @@ const Settings = () => {
     const [closingDay, setClosingDay] = useState("");
     const [incidentTime, setIncidentTime] = useState("");
     const [incidentDay, setIncidentDay] = useState("");
+    const [days, setDays] = useState(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']);
+    const [openingItems, setOpeningItems] = useState([]);
+    const [closingItems, setClosingItems] = useState([]);
+    const [incidentItems, setIncidentItems] = useState([]);
+    // Function to handle checkbox change
+    const handleOpeningChange = (event) => {
+        const checkboxValue = parseInt(event.target.value); // Convert value to integer
+        if (event.target.checked) {
+            // If checkbox is checked, add it to the checkedItems array
+            setOpeningItems([...openingItems, checkboxValue]);
+        } else {
+            // If checkbox is unchecked, remove it from the checkedItems array
+            setOpeningItems(openingItems.filter(item => item !== checkboxValue));
+        }
+    };
+    const handleClosingChange = (event) => {
+        const checkboxValue = parseInt(event.target.value); // Convert value to integer
+        if (event.target.checked) {
+            // If checkbox is checked, add it to the checkedItems array
+            setClosingItems([...closingItems, checkboxValue]);
+        } else {
+            // If checkbox is unchecked, remove it from the checkedItems array
+            setClosingItems(closingItems.filter(item => item !== checkboxValue));
+        }
+    };
+    const handleIncidentChange = (event) => {
+        const checkboxValue = parseInt(event.target.value); // Convert value to integer
+        if (event.target.checked) {
+            // If checkbox is checked, add it to the checkedItems array
+            setIncidentItems([...incidentItems, checkboxValue]);
+        } else {
+            // If checkbox is unchecked, remove it from the checkedItems array
+            setIncidentItems(incidentItems.filter(item => item !== checkboxValue));
+        }
+    };
+
+    useEffect(() => {
+        const userData = JSON.parse(localStorage.getItem('user'));
+        setAdminEmail(userData.email);
+        setAdminPhone(userData.phone);
+        setUserId(userData._id);
+    }, [])
+
+    useEffect(()=>{
+        const SettingData =async () => {
+            const userData = JSON.parse(localStorage.getItem('user'));
+            const response =await dispatch(getSettingData(userData._id))
+            if(response){
+                console.log(response,'response');
+                setAdminEmail(response.adminEmail);
+                setAdminPhone(response.adminPhone);
+                setOpeningItems(response.openingItems);
+                setClosingItems(response.closingItems);
+                setIncidentItems(response.incidentItems);
+                setOpeningTime(response.openingTime);
+                setClosingTime(response.closingTime);
+                setIncidentTime(response.incidentTime);
+            }
+        }
+        SettingData();
+    },[])
+
     const [selectedTimezone, setSelectedTimezone] = useState(
         Intl.DateTimeFormat().resolvedOptions().timeZone
     )
     const logoAndBranding = () => {
-
+        const data = {
+            'openingItems': openingItems,
+            'closingItems': closingItems,
+            'incidentItems': incidentItems,
+            'openingTime': openingTime,
+            'closingTime': closingTime,
+            'incidentTime': incidentTime,
+            'adminEmail': adminEmail,
+            'adminPhone': adminPhone,
+            'userId': userId
+        }
+        console.log(data, 'data');
+        dispatch(updateSetting(data));
     }
 
     return (
         <>
             <h1 className="text-[28px] uppercase">Settings</h1>
             <div>
-                <div className="w-full flex items-center p-3">
+                {/* <div className="w-full flex items-center p-3">
                     <label htmlFor="timezone" className="w-[200px] uppercase  font-medium leading-6 text-gray-900">
                         Timezone
                     </label>
@@ -53,7 +130,7 @@ const Settings = () => {
                             className="w-[450px] block rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
                     </div>
-                </div>
+                </div> */}
                 <div className="w-full flex items-center p-3">
                     <label htmlFor="email" className="w-[200px] uppercase  font-medium leading-6 text-gray-900">
                         Admin Alerts
@@ -114,27 +191,24 @@ const Settings = () => {
                         Day
                     </label>
                     <div className="flex justify-between w-[450px]">
-                        <label htmlFor="openingDay" className="w-[50px] uppercase  font-medium leading-6 text-gray-900">
-                            Mon
-                        </label>
-                        <label htmlFor="openingDay" className="w-[50px] uppercase  font-medium leading-6 text-gray-900">
-                            Tue
-                        </label>
-                        <label htmlFor="openingDay" className="w-[50px] uppercase  font-medium leading-6 text-gray-900">
-                            Wed
-                        </label>
-                        <label htmlFor="openingDay" className="w-[50px] uppercase  font-medium leading-6 text-gray-900">
-                            Thurs
-                        </label>
-                        <label htmlFor="openingDay" className="w-[50px] uppercase  font-medium leading-6 text-gray-900">
-                            Fri
-                        </label>
-                        <label htmlFor="openingDay" className="w-[50px] uppercase  font-medium leading-6 text-gray-900">
-                            Sat
-                        </label>
-                        <label htmlFor="openingDay" className="w-[50px] uppercase  font-medium leading-6 text-gray-900">
-                            Sun
-                        </label>
+                        {
+                            days.map((day, index) => (
+                                <div key={index} className="flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        id={`${day}-day-open`}
+                                        value={index}
+                                        checked={openingItems.includes(index)} // Check if day is in checkedItems array
+                                        onChange={handleOpeningChange}
+                                        className="mx-2"
+                                    />
+                                    <label htmlFor={`${day}-day-open`} className=" uppercase  font-medium leading-6 text-gray-900">
+                                        {day}
+                                    </label>
+
+                                </div>
+                            ))
+                        }
                     </div>
                 </div>
                 <div className="w-full flex items-center px-3 mt-8">
@@ -165,27 +239,24 @@ const Settings = () => {
                         Day
                     </label>
                     <div className="flex justify-between w-[450px]">
-                        <label htmlFor="openingTime" className="w-[50px] uppercase  font-medium leading-6 text-gray-900">
-                            Mon
-                        </label>
-                        <label htmlFor="openingTime" className="w-[50px] uppercase  font-medium leading-6 text-gray-900">
-                            Tue
-                        </label>
-                        <label htmlFor="openingTime" className="w-[50px] uppercase  font-medium leading-6 text-gray-900">
-                            Wed
-                        </label>
-                        <label htmlFor="openingTime" className="w-[50px] uppercase  font-medium leading-6 text-gray-900">
-                            Thurs
-                        </label>
-                        <label htmlFor="openingTime" className="w-[50px] uppercase  font-medium leading-6 text-gray-900">
-                            Fri
-                        </label>
-                        <label htmlFor="openingTime" className="w-[50px] uppercase  font-medium leading-6 text-gray-900">
-                            Sat
-                        </label>
-                        <label htmlFor="openingTime" className="w-[50px] uppercase  font-medium leading-6 text-gray-900">
-                            Sun
-                        </label>
+                        {
+                            days.map((day, index) => (
+                                <div key={index} className="flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        id={`${day}-day-close`}
+                                        value={index}
+                                        checked={closingItems.includes(index)} // Check if day is in checkedItems array
+                                        onChange={handleClosingChange}
+                                        className="mx-2"
+                                    />
+                                    <label htmlFor={`${day}-day-close`} className=" uppercase  font-medium leading-6 text-gray-900">
+                                        {day}
+                                    </label>
+
+                                </div>
+                            ))
+                        }
                     </div>
                 </div>
                 <div className="w-full flex items-center px-3 mt-8">
@@ -205,8 +276,8 @@ const Settings = () => {
                             type="text"
                             name="openingTime"
                             id="openingTime"
-                            value={openingTime}
-                            onChange={(e) => setOpeningTime(e.target.value)}
+                            value={incidentTime}
+                            onChange={(e) => setIncidentTime(e.target.value)}
                             className="w-[300px] block rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
                     </div>
@@ -216,27 +287,24 @@ const Settings = () => {
                         Day
                     </label>
                     <div className="flex justify-between w-[450px]">
-                        <label htmlFor="openingTime" className="w-[50px] uppercase  font-medium leading-6 text-gray-900">
-                            Mon
-                        </label>
-                        <label htmlFor="openingTime" className="w-[50px] uppercase  font-medium leading-6 text-gray-900">
-                            Tue
-                        </label>
-                        <label htmlFor="openingTime" className="w-[50px] uppercase  font-medium leading-6 text-gray-900">
-                            Wed
-                        </label>
-                        <label htmlFor="openingTime" className="w-[50px] uppercase  font-medium leading-6 text-gray-900">
-                            Thurs
-                        </label>
-                        <label htmlFor="openingTime" className="w-[50px] uppercase  font-medium leading-6 text-gray-900">
-                            Fri
-                        </label>
-                        <label htmlFor="openingTime" className="w-[50px] uppercase  font-medium leading-6 text-gray-900">
-                            Sat
-                        </label>
-                        <label htmlFor="openingTime" className="w-[50px] uppercase  font-medium leading-6 text-gray-900">
-                            Sun
-                        </label>
+                        {
+                            days.map((day, index) => (
+                                <div key={index} className="flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        id={`${day}-day-incident`}
+                                        value={index}
+                                        checked={incidentItems.includes(index)} // Check if day is in checkedItems array
+                                        onChange={handleIncidentChange}
+                                        className="mx-2"
+                                    />
+                                    <label htmlFor={`${day}-day-incident`} className=" uppercase  font-medium leading-6 text-gray-900">
+                                        {day}
+                                    </label>
+
+                                </div>
+                            ))
+                        }
                     </div>
                 </div>
             </div>

@@ -122,7 +122,7 @@ const Close = () => {
                                     </div>
                                     <Checkbox id={item._id} label="" checked={checkedList.includes(item._id)} onChange={() => handleCheckboxChange(item._id, index)} />
                                     {/* <HiOutlineDotsVertical  /> */}
-                                    <FaEdit className="cursor-pointer" onClick={()=>handleEditChange(item._id)} />
+                                    <FaEdit className="cursor-pointer" onClick={()=>handleEditChange(item.checklistId)} />
                                     {visibleItemIndex === index ? (
                                         <IoIosArrowUp className="text-[20px] cursor-pointer mx-2" onClick={() => setVisibleItemIndex(null)} />
                                     ) : (
@@ -134,7 +134,6 @@ const Close = () => {
                             {
                                 visibleItemIndex === index ? (
                                     <>
-                                        
                                         {
                                             item.enableTextBox && item.textBox && item.textBox.length > 0 && item.textBox.map((textItem, textIndex) => (
                                                 <div className="flex justify-between items-center my-1" key={`${index}-${textIndex}`}>

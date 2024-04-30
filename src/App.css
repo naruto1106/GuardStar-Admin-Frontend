@@ -41,3 +41,7 @@
 .table-p {
   padding: 10px !important;
 }
+
+.temperature-slider input {
+  display: none;
+}

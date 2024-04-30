@@ -18,6 +18,7 @@ import AddChecklist from "../pages/AddChecklist";
 import { getAuthentication, setAuth } from "../reducer/AuthSlice";
 import { useState, useEffect } from "react";
 import EditChecklist from "../pages/EditChecklist";
+import TempDetail from "../pages/TempDetail";
 
 
 const Router = () => {
@@ -104,6 +105,16 @@ const Router = () => {
                     token ? (
                         <MainLayout layout="temperatures">
                             <Temperatures />
+                        </MainLayout>
+                    ) : (<Navigate to="/login" />)
+                }
+            />
+            <Route
+                path="/temperatures/:temp/:id"
+                element={
+                    token ? (
+                        <MainLayout layout="temperatures">
+                            <TempDetail />
                         </MainLayout>
                     ) : (<Navigate to="/login" />)
                 }

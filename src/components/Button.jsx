@@ -29,7 +29,7 @@ const Button = (props) => {
     }
 
     return (
-        <button onClick={handleChange} className={`py-3 ${getSize(size)} ${getStyle(variant)} uppercase`}>
+        <button onClick={handleChange} className={`py-3 ${getSize(size)} ${getStyle(variant)} shadow uppercase`}>
             { name }
         </button>
     )

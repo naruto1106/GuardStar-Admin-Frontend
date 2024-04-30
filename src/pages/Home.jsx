@@ -1,10 +1,10 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import { useDispatch } from "react-redux";
-import { useEffect } from "react";
-import { getClosingCheckStatus, getOpeningCheckStatus } from "../action/checklist";
+import { Icon } from '@iconify-icon/react';
+import { getClosingCheckStatus, getOpeningCheckStatus, getSensorData } from "../action/checklist";
 import { getIncident } from "../action/team";
 const Home = () => {
     const navigate = useNavigate();
@@ -13,7 +13,7 @@ const Home = () => {
     const [checkOpening, setCheckOpening] = useState(false);
     const [checkClosing, setCheckClosing] = useState(false);
     const [checkIncident, setCheckIncident] = useState(false);
-    
+    const [sensorData, setSensorData] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -43,6 +43,21 @@ const Home = () => {
         fetchData();
     },[])
 
+    //get the sensor data by cron
+    useEffect(() => {
+      const fetchSensorData =async () => {
+          const userData = JSON.parse(localStorage.getItem('user'));
+          const data =await dispatch(getSensorData(userData._id));
+          setSensorData(data);
+          console.log(sensorData, 'sensorData')
+      }
+      fetchSensorData();
+      // Fetch sensor data every 15 seconds
+      const interval = setInterval(fetchSensorData, 30000);
+;      // Clear the interval when the component unmounts
+      return () => clearInterval(interval);
+  }, [])
+
     const gotoOpen = () => {
         navigate('/open')
     }
@@ -54,7 +69,7 @@ const Home = () => {
     }
     return (
         <>
-             <div className="flex justify-center">
+            <div className="flex justify-center">
                 <div className="w-[550px] flex justify-between">
                     <Button 
                         size="normal" 
@@ -98,25 +113,33 @@ const Home = () => {
                 </div>
             </div>
             <div className="flex justify-center mt-5">
-                <div className="w-[600px] flex justify-between flex-wrap">
-                    <div className="w-[150px] m-2 text-[20px] text-center px-5 py-3 border-2 border-green">
-                        FRIDGE 1 5'c
-                    </div>
-                    <div className="w-[150px] m-2 text-[20px] text-center px-5 py-3 border-2 border-green">
-                        FRIDGE 1 5'c
-                    </div>
-                    <div className="w-[150px] m-2 text-[20px] text-center px-5 py-3 border-2 border-green">
-                        FRIDGE 1 5'c
-                    </div>
-                    <div className="w-[150px] m-2 text-[20px] text-center px-5 py-3 border-2 border-green">
-                        FRIDGE 1 5'c
-                    </div>
-                    <div className="w-[150px] m-2 text-[20px] text-center px-5 py-3 border-2 border-green">
-                        FRIDGE 1 5'c
-                    </div>
-                    <div className="w-[150px] m-2 text-[20px] text-center px-5 py-3 border-2 border-green">
-                        FRIDGE 1 5'c
-                    </div>
+                <div className="w-[700px] flex flex-wrap">
+                    {
+                        sensorData && sensorData.length >0 && sensorData.map((item, index) => (
+                            <div key={index} className="m-2 text-[20px] text-center py-3 px-2 border-4 border-green inline-block">
+                                <span className="uppercase text-[25px]"> {item.name} </span>
+                                <div className="flex justify-between text-[#A1A1A1] mt-2">
+                                    <div className="flex w-[85px] justify-center items-center mx-1" >
+                                        <Icon icon="uil:temperature-quarter" className='text-[16px]' />
+                                        <span className="text-[14px]">Temp</span>
+                                    </div> 
+                                    <div className="w-[2px] bg-[#299D8D]"></div>
+                                    <div className="flex w-[85px] justify-center items-center mx-1" >
+                                        <Icon icon="material-symbols:humidity-mid" className='text-[16px]' />
+                                        <span className="text-[14px]">Humidity</span>
+                                    </div>
+                                </div>
+                                <div className="flex justify-between text-[#A1A1A1] mt-2">
+                                    <div className="flex w-[85px] justify-center items-center mx-1" >
+                                        <span className="text-[20px] text-[#299D8D] font-bold"> {item.temp} °C</span>
+                                    </div> 
+                                    <div className="flex w-[85px] justify-center items-center mx-1" >
+                                        <span className="text-[20px] text-[#299D8D] font-bold"> {item.humidity}%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        ))
+                    }
 
                 </div>
             </div>

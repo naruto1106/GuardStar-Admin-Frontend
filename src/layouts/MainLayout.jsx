@@ -6,8 +6,8 @@ const MainLayout = (props) => {
     const { children, layout } = props;
 
     return (
-        <div className="container mx-auto flex min-h-screen">
-            <div className="w-[300px] relative bg-navbar p-5 flex justify-center ">
+        <div className="container lg:mx-auto flex min-h-screen">
+            <div className="w-[300px] min-w-[250px] relative bg-navbar p-5 flex justify-center ">
                 <ul className="mt-[100px] uppercase text-white text-[20px] text-center">
                     <li className={`py-4 cursor-pointer ${layout == 'home' ? 'text-yellowFont' : ''} `}>
                         <a href="/home"> Home</a>
