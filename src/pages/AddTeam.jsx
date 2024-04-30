@@ -1,5 +1,5 @@
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
 import Button from "../components/Button"
 import { useDispatch } from "react-redux";
@@ -16,6 +16,13 @@ const AddTeam = () => {
     const [trainingLevel, setTrainingLevel] = useState("");
     const [hygiene, setHygiene] = useState("No");
     const [allergy, setAllergy] = useState("No");
+    const [userId, setUserId] = useState('');
+
+    useEffect(() => {
+        const userData = JSON.parse(localStorage.getItem('user'));
+        setUserId(userData._id)
+        
+    }, [])
 
     const handleHygieneChange = (e) => {
         setHygiene(e.target.value);
@@ -33,7 +40,8 @@ const AddTeam = () => {
             "trainingLevel" : trainingLevel,
             "hygieneTraining" : hygiene,
             "allergenTraining" : allergy,
-            "role" : "Team"
+            "role" : "Team",
+            "userId" : userId
         }
         console.log(data, 'data');
         const teamData = await dispatch(createTeam(data));

@@ -139,10 +139,10 @@ const Temperatures = () => {
                                     </div>
                                     <div className="flex justify-around text-[#A1A1A1] mt-2">
                                         <div className="flex w-[85px] justify-start items-center mx-1" >
-                                            <span className="text-[18px] text-[#299D8D] font-bold"> {item.temp}°C</span>
+                                            <span className="text-[18px] text-[#299D8D] font-bold"> {item.temp}</span>
                                         </div> 
                                         <div className="flex w-[85px] justify-end items-center mx-1" >
-                                            <span className="text-[18px] text-[#299D8D] font-bold"> {item.humidity}%</span>
+                                            <span className="text-[18px] text-[#299D8D] font-bold"> {item.humidity}</span>
                                         </div>
                                     </div>
                                 </div>

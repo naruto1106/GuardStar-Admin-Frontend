@@ -16,7 +16,9 @@ const Team = () => {
         }
     },[teamlists])
     useEffect(() => {
-        dispatch(getTeamlists())
+        const userData = JSON.parse(localStorage.getItem('user'));
+        dispatch(getTeamlists(userData._id))
+        
     }, [])
 
     const GotoAddTeam = () => {

@@ -91,7 +91,7 @@ const TempDetail = () => {
                                 <div className='flex items-baseline mt-5 '>
                                     <Icon icon="uil:temperature-quarter" className='text-[#13ae77] text-[25px]' />
                                     <span className='text-[#1C1D72] text-[40px]'> {temp}</span>
-                                    <span className='text-[25px] text-[#1C1D72]'> °C </span>
+                                    <span className='text-[25px] text-[#1C1D72]'>  </span>
                                 </div>
                                 <div className='flex justify-end mt-10'>
                                     <span className='text-[#1C1D72] text-[20px]'>Last updated {formatDate(sensorData[0].updatedAt)}</span>

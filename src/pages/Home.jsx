@@ -113,28 +113,28 @@ const Home = () => {
                 </div>
             </div>
             <div className="flex justify-center mt-5">
-                <div className="w-[700px] flex flex-wrap">
+                <div className="w-[720px] flex flex-wrap">
                     {
                         sensorData && sensorData.length >0 && sensorData.map((item, index) => (
                             <div key={index} className="m-2 text-[20px] text-center py-3 px-2 border-4 border-green inline-block">
                                 <span className="uppercase text-[25px]"> {item.name} </span>
                                 <div className="flex justify-between text-[#A1A1A1] mt-2">
-                                    <div className="flex w-[85px] justify-center items-center mx-1" >
+                                    <div className="flex w-[90px] justify-center items-center mx-1" >
                                         <Icon icon="uil:temperature-quarter" className='text-[16px]' />
                                         <span className="text-[14px]">Temp</span>
                                     </div> 
                                     <div className="w-[2px] bg-[#299D8D]"></div>
-                                    <div className="flex w-[85px] justify-center items-center mx-1" >
+                                    <div className="flex w-[90px] justify-center items-center mx-1" >
                                         <Icon icon="material-symbols:humidity-mid" className='text-[16px]' />
                                         <span className="text-[14px]">Humidity</span>
                                     </div>
                                 </div>
                                 <div className="flex justify-between text-[#A1A1A1] mt-2">
-                                    <div className="flex w-[85px] justify-center items-center mx-1" >
-                                        <span className="text-[20px] text-[#299D8D] font-bold"> {item.temp} °C</span>
+                                    <div className="flex w-[90px] justify-center items-center mx-1" >
+                                        <span className="text-[20px] text-[#299D8D] font-bold"> {item.temp}</span>
                                     </div> 
-                                    <div className="flex w-[85px] justify-center items-center mx-1" >
-                                        <span className="text-[20px] text-[#299D8D] font-bold"> {item.humidity}%</span>
+                                    <div className="flex w-[90px] justify-center items-center mx-1" >
+                                        <span className="text-[20px] text-[#299D8D] font-bold"> {item.humidity}</span>
                                     </div>
                                 </div>
                             </div>

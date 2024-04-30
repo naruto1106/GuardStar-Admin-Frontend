@@ -3,12 +3,12 @@ import { APIURL } from "./contant";
 import { toast } from "react-toastify";
 import { setAuth } from "../reducer/AuthSlice";
 
-export const getTeamlists = () => {
+export const getTeamlists = (userId) => {
     return async (dispatch) => {
       try {
         // Make API request to register the user
         const response = await fetch(
-          `${APIURL}/app/users/all`,
+          `${APIURL}/app/users/all?userId=${userId}`,
           {
             method: "GET",
             headers: {
