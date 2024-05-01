@@ -35,7 +35,7 @@ const Open = () => {
         dispatch(getOpeninglist(userData._id));
     }, [])
 
-    console.log(openingList,'openingList');
+    // console.log(openingList,'openingList');
 
     const handleCheckboxChange = (id, Index) => {
         const newCheckedList = [...checkedList];
@@ -49,6 +49,7 @@ const Open = () => {
         let status = index > -1 ? false : true;
 
         const textboxData = handleAddUserTextChange(Index);
+
         const data = {
             "id" : id,
             "status" : status,
@@ -62,37 +63,37 @@ const Open = () => {
         navigate('/addchecklist?checkType=open')
     }
      
-    const handleAddUserTextChange = (index, key, value) => {
+    const handleAddUserTextChange = (index, text, value) => {
         // Make a deep copy of the current openingList
         const updatedOpeningList = openingList.map(item => ({ ...item }));
     
         // Get the item at the specified index
         const item = updatedOpeningList[index];
     
-        // Find the textbox entry with the specified key
-        const textBoxEntryIndex = item.textBox.findIndex(entry => Object.keys(entry)[0] === key);
+        // Find the textBox entry with the specified text
+        const updatedTextBox = item.textBox.map(textItem => {
+            if (textItem.text === text) {
+                // Return a new object with updated value
+                return { ...textItem, value: value };
+            }
+            return textItem;
+        });
     
-        // If textBoxEntry exists, update its value
-        if (textBoxEntryIndex !== -1) {
-            // Make a deep copy of the textBox entry
-            const updatedTextBoxEntry = { ...item.textBox[textBoxEntryIndex] };
+        // Update the textBox array in the item
+        item.textBox = updatedTextBox;
     
-            // Update the value of the textBox entry
-            updatedTextBoxEntry[Object.keys(updatedTextBoxEntry)[0]] = value;
+        // Update the openingList with the modified item
+        updatedOpeningList[index] = item;
     
-            // Update the textBox entry in the item
-            item.textBox = item.textBox.map((entry, idx) => idx === textBoxEntryIndex ? updatedTextBoxEntry : entry);
-    
-            // Update the openingList with the modified item
-            updatedOpeningList[index] = { ...item };
-    
-            // Assuming you're using React hooks to manage state, update the state with the modified openingList
-            setOpeningList(updatedOpeningList);
-        }
+        // Assuming you're using React hooks to manage state, update the state with the modified openingList
+        setOpeningList(updatedOpeningList);
     
         // Return the updated textbox data
-        return item.textBox;
+        return updatedTextBox;
     };
+    
+        
+    
     
     const handleEditChange =async (id) => {
         navigate(`/editchecklist/open/${id}`)
@@ -150,14 +151,14 @@ const Open = () => {
                                         {
                                             item.enableTextBox && item.textBox && item.textBox.length > 0 && item.textBox.map((textItem, textIndex) => (
                                                 <div className="flex justify-between items-center my-1" key={`${index}-${textIndex}`}>
-                                                    <span className="text-[14px] w-[450px]">{Object.keys(textItem)[0]}</span>
+                                                    <span className="text-[14px] w-[450px]">{textItem.text}</span>
                                                     <input
                                                         id={`addUserText-${index}-${textIndex}`}
                                                         name={`addUserText-${index}-${textIndex}`}
                                                         type="text"
-                                                        value={Object.values(textItem)[0]}
+                                                        value={textItem.value}
                                                         className="block sm  rounded-md border-0 p-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                                        onChange={(e) => handleAddUserTextChange(index, Object.keys(textItem)[0], e.target.value)}
+                                                        onChange={(e) => handleAddUserTextChange(index, textItem.text, e.target.value)}
                                                         />
                                                 </div>
                                             ))

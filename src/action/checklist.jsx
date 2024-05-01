@@ -1,4 +1,4 @@
-import { APIURL } from './contant';
+import { APIURL } from './constant';
 import { toast } from 'react-toastify';
 import { setOpeningChecklist } from '../reducer/ChecklistSlice';
 

@@ -19,6 +19,7 @@ import { getAuthentication, setAuth } from "../reducer/AuthSlice";
 import { useState, useEffect } from "react";
 import EditChecklist from "../pages/EditChecklist";
 import TempDetail from "../pages/TempDetail";
+import Register from "../pages/register";
 
 
 const Router = () => {
@@ -42,6 +43,10 @@ const Router = () => {
                 element={
                     token ? <Navigate to="/home" /> : <Login />
                 }
+            />
+            <Route
+                path="/register"
+                element={<Register />}
             />
             <Route
                 path="/"

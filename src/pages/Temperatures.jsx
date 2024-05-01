@@ -21,7 +21,7 @@ const Temperatures = () => {
         }
         fetchSensorData();
         // Fetch sensor data every 15 seconds
-        const interval = setInterval(fetchSensorData, 30000);
+        const interval = setInterval(fetchSensorData, 60000);
         ;      // Clear the interval when the component unmounts
         return () => clearInterval(interval);
     }, [])

@@ -70,13 +70,18 @@ const EditChecklist = () => {
   };
 
   const addUserTextBox = () => {
-    setAddUserText([...addUserText, '']);
+    let data = {
+      "text" : '',
+      "value" : ''
+    }
+    setAddUserText([...addUserText, data]);
   };
 
   const handleAddUserTextChange = (index, key, newValue) => {
     const updatedAddUserText = [...addUserText];
     let data = {
-      [key]: newValue
+      "text" : key,
+      "value" : newValue
     }
     updatedAddUserText[index] = data
     setAddUserText(updatedAddUserText);
@@ -98,16 +103,8 @@ const EditChecklist = () => {
   }
 
   const handleSave = async () => {
-
-    const hasEmptyKey = addUserText.some(item => {
-      if (typeof item === 'object' && item !== null) {
-        // If the item is an object, check if any key is empty
-        return Object.keys(item).some(key => key === '');
-      } else {
-        // If the item is not an object, check if it's an empty string
-        return item === '';
-      }
-    });
+    const hasEmptyKey = addUserText.some((item) => item.text === '');
+   
     // Check if any textarea value in checkSection is empty
     const isEmptySection = checkSection.some((value) => value.trim() === '');
     if (enableName && name === ''){
@@ -289,8 +286,8 @@ const EditChecklist = () => {
               </div>
               <div className="my-5 ">
                 { addUserText && addUserText.map((item, index) => {
-                  const key = Object.keys(item)[0] || ''; // Get the key dynamically
-                  const value = item[key] || ''; // Initialize value with an empty string if undefined
+                  const key = item.text || ''; // Get the key dynamically
+                  const value = item.value || ''; // Initialize value with an empty string if undefined
                   return (
                     <div className="mt-2 flex justify-between items-center" key={index}>
                       <input

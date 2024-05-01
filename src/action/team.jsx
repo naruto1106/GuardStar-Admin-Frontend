@@ -1,5 +1,5 @@
 import { setTeamlist } from "../reducer/TeamSlice";
-import { APIURL } from "./contant";
+import { APIURL } from "./constant";
 import { toast } from "react-toastify";
 import { setAuth } from "../reducer/AuthSlice";
 
@@ -89,6 +89,43 @@ export const SignIn = (loginData) => {
 
     } catch (error) {
       toast.error("Username or password is not correct.");
+    }
+  }
+}
+
+export const SignUp = (registerData) => {
+  return async (dispatch) => {
+    try {
+      // Make API request to register the user
+      const response = await fetch(
+        `${APIURL}/auth/register`,
+        {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(registerData)
+        }
+      );
+       
+      if (!response.ok) {
+        throw new Error('Failed to signup');
+      }
+      const data = await response.json();
+      
+      // localStorage.setItem('token', data.token);
+      // localStorage.setItem('user', JSON.stringify(data.user));
+      // let token = localStorage.getItem("token");
+      // if (token) {
+      //   dispatch(setAuth({ authentication: true }));
+      // }
+      // Dispatch success action if the request is successful
+      // dispatch(setAuth({ auth: true, userInfo: data }));
+      toast.success('Register successful!');
+      return data;
+
+    } catch (error) {
+      toast.error("Email or username already registered.");
     }
   }
 }

@@ -33,16 +33,9 @@ const AddChecklist = () => {
   const [checkSection, setCheckSection] = useState([]);
 
   const handleSave = async () => {
+    
+    const hasEmptyKey = addUserText.some((item) => item.text === '');
 
-    const hasEmptyKey = addUserText.some(item => {
-      if (typeof item === 'object' && item !== null) {
-        // If the item is an object, check if any key is empty
-        return Object.keys(item).some(key => key === '');
-      } else {
-        // If the item is not an object, check if it's an empty string
-        return item === '';
-      }
-    });
     // Check if any textarea value in checkSection is empty
     const isEmptySection = checkSection.some((value) => value.trim() === '');
     if (enableName && name === ''){
@@ -117,13 +110,18 @@ const AddChecklist = () => {
   };
 
   const addUserTextBox = () => {
-    setAddUserText([...addUserText, '']);
+    let data = {
+      "text" : '',
+      "value" : ''
+    }
+    setAddUserText([...addUserText, data]);
   };
 
-  const handleAddUserTextChange = (index, key, newValue) => {
+  const handleAddUserTextChange = (index, key) => {
     const updatedAddUserText = [...addUserText];
     let data = {
-      [key]: newValue
+      "text" : key,
+      "value" : ''
     }
     updatedAddUserText[index] = data
     setAddUserText(updatedAddUserText);
@@ -267,8 +265,8 @@ const AddChecklist = () => {
               </div>
               <div className="my-5 ">
                 {addUserText.map((item, index) => {
-                  const key = Object.keys(item)[0] || ''; // Get the key dynamically
-                  const value = item[key] || ''; // Initialize value with an empty string if undefined
+                  const key = item.text || ''; // Get the key dynamically
+                  // const value = item.value || ''; // Initialize value with an empty string if undefined
                   return (
                     <div className="mt-2 flex justify-between items-center" key={index}>
                       <input
@@ -277,7 +275,7 @@ const AddChecklist = () => {
                         type="text"
                         className="block w-full rounded-md border-0 p-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         value={key}
-                        onChange={(e) => handleAddUserTextChange(index, e.target.value, value)}
+                        onChange={(e) => handleAddUserTextChange(index, e.target.value)}
                       />
                       <Icon
                         icon="mi:delete"
