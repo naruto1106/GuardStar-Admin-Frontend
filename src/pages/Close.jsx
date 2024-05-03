@@ -105,7 +105,7 @@ const Close = () => {
             </div>
             <div className="py-5 px-8">
                 {
-                    closingList && closingList.length > 0 && closingList.map((item, index) => (
+                    closingList && closingList.length > 0 ? (closingList.map((item, index) => (
                         <div key={index} className={`${index !== closingList.length - 1 ? 'border-b-2 border-grey' : ''}`}>
                             <div  className={`flex justify-between items-center py-5 `}>
                                 <span className="text-[18px] w-[400px]"> {item.title} </span>
@@ -174,7 +174,9 @@ const Close = () => {
                                 
                             </div>
                         </div>
-                    ))
+                    ))) : (
+                        <h2 className="font-bold text-center text-[18px]">Today is not closing.</h2>
+                    )
                 }
             </div>
         </>

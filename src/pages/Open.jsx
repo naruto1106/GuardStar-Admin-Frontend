@@ -119,7 +119,7 @@ const Open = () => {
                     <IoIosArrowUp className="text-[20px]" />
                 </div> */}
                 {
-                    openingList && openingList.length > 0 && openingList.map((item, index) => (
+                    openingList && openingList.length > 0 ? ( openingList.map((item, index) => (
                         <div key={index} className={`${index !== openingList.length - 1 ? 'border-b-2 border-grey' : ''}`}>
                             <div  className={`flex justify-between items-center py-5 `}>
                                 <span className="text-[18px] w-[400px]"> {item.title} </span>
@@ -190,7 +190,9 @@ const Open = () => {
                              
                             </div>
                         </div>
-                    ))
+                    ))) : (
+                        <h2 className="font-bold text-center text-[18px]">Today is not opening.</h2>
+                    )
                 }
             </div>
 
