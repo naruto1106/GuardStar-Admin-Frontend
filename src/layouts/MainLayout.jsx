@@ -5,6 +5,11 @@ import logoImage from '../assets/guardstar_logo.jpg'
 const MainLayout = (props) => {
     const { children, layout } = props;
 
+    const logout = () => {
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+    }
+
     return (
         <div className="container lg:mx-auto flex min-h-screen">
             <div className="w-[300px] min-w-[250px] relative bg-navbar p-5 flex justify-center ">
@@ -37,6 +42,9 @@ const MainLayout = (props) => {
                     </li> */}
                     <li className={`py-4 cursor-pointer ${layout == 'settings' ? 'text-yellowFont' : ''} `}>
                         <a href="/settings"> Settings </a>
+                    </li>
+                    <li className={`py-4 cursor-pointer`} onClick={()=>logout()}>
+                        <a href="/settings"> Logout </a>
                     </li>
                 </ul>
                 <div className="absolute top-[10px] left-1/2 transform -translate-x-1/2">

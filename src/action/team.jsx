@@ -148,6 +148,7 @@ export const getIncident = (userId) => {
         throw new Error('Failed to categories');
       }
       const data = await response.json();
+      console.log(data, 'data');
       dispatch(setTeamlist({ incidentList : data }))
       return data;
     } catch (error) {
