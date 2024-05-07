@@ -12,11 +12,11 @@ const Settings = () => {
     const [userId, setUserId] = useState("");
     const [adminEmail, setAdminEmail] = useState("");
     const [adminPhone, setAdminPhone] = useState("");
-    const [openingTime, setOpeningTime] = useState("");
+    const [openingTime, setOpeningTime] = useState(0);
     const [openingDay, setOpeningDay] = useState("");
-    const [closingTime, setClosingTime] = useState("");
+    const [closingTime, setClosingTime] = useState(0);
     const [closingDay, setClosingDay] = useState("");
-    const [incidentTime, setIncidentTime] = useState("");
+    const [incidentTime, setIncidentTime] = useState(0);
     const [incidentDay, setIncidentDay] = useState("");
     const [days, setDays] = useState(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']);
     const [openingItems, setOpeningItems] = useState([]);
@@ -66,7 +66,6 @@ const Settings = () => {
             const userData = JSON.parse(localStorage.getItem('user'));
             const response =await dispatch(getSettingData(userData._id))
             if(response){
-                console.log(response,'response');
                 setAdminEmail(response.adminEmail);
                 setAdminPhone(response.adminPhone);
                 setOpeningItems(response.openingItems);
@@ -95,7 +94,6 @@ const Settings = () => {
             'adminPhone': adminPhone,
             'userId': userId
         }
-        console.log(data, 'data');
         dispatch(updateSetting(data));
     }
 
@@ -177,11 +175,24 @@ const Settings = () => {
                     </label>
                     <div className="mt-2">
                         <input
-                            type="text"
+                            type="number"
                             name="openingTime"
                             id="openingTime"
+                            min="1"
+                            max="24"
                             value={openingTime}
-                            onChange={(e) => setOpeningTime(e.target.value)}
+                            onChange={(e) => {
+                                const value = parseInt(e.target.value); // Parse the input value to an integer
+                                if (!isNaN(value)) { // Check if the parsed value is a valid number
+                                    if (value >= 0 && value <= 23) { // Check if the value is within the specified range
+                                        setOpeningTime(value); // Update the openingTime state
+                                    } else if (value < 0) {
+                                        setOpeningTime(0); // If the value is less than min, set it to min
+                                    } else {
+                                        setOpeningTime(23); // If the value is greater than max, set it to max
+                                    }
+                                } 
+                            }}
                             className="w-[300px] block rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
                     </div>
@@ -225,11 +236,24 @@ const Settings = () => {
                     </label>
                     <div className="mt-2">
                         <input
-                            type="text"
+                            type="number"
                             name="closingTime"
                             id="closingTime"
+                            min="0"
+                            max="23"
                             value={closingTime}
-                            onChange={(e) => setClosingTime(e.target.value)}
+                            onChange={(e) => {
+                                const value = parseInt(e.target.value); // Parse the input value to an integer
+                                if (!isNaN(value)) { // Check if the parsed value is a valid number
+                                    if (value >= 0 && value <= 23) { // Check if the value is within the specified range
+                                        setClosingTime(value); // Update the openingTime state
+                                    } else if (value < 0) {
+                                        setClosingTime(0); // If the value is less than min, set it to min
+                                    } else {
+                                        setClosingTime(23); // If the value is greater than max, set it to max
+                                    }
+                                } 
+                            }}
                             className="w-[300px] block rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
                     </div>
@@ -273,11 +297,24 @@ const Settings = () => {
                     </label>
                     <div className="mt-2">
                         <input
-                            type="text"
+                            type="number"
                             name="openingTime"
                             id="openingTime"
+                            min="0"
+                            max="23"
                             value={incidentTime}
-                            onChange={(e) => setIncidentTime(e.target.value)}
+                            onChange={(e) => {
+                                const value = parseInt(e.target.value); // Parse the input value to an integer
+                                if (!isNaN(value)) { // Check if the parsed value is a valid number
+                                    if (value >= 0 && value <= 23) { // Check if the value is within the specified range
+                                        setIncidentTime(value); // Update the openingTime state
+                                    } else if (value < 0) {
+                                        setIncidentTime(0); // If the value is less than min, set it to min
+                                    } else {
+                                        setIncidentTime(23); // If the value is greater than max, set it to max
+                                    }
+                                } 
+                            }}
                             className="w-[300px] block rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
                     </div>
