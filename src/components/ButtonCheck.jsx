@@ -1,6 +1,6 @@
 
 const ButtonCheck = (props) => {
-    const { label, variant, color, handleClick } = props;
+    const { label, variant, color, handleClick, size } = props;
     const getStyle = (variant) => {
         switch(variant) {
             case 'primary':
@@ -22,9 +22,20 @@ const ButtonCheck = (props) => {
         }
     }
 
+    const getSize = (size) => {
+        switch(size) {
+            case 'small':
+                return 'w-[150px]';
+            case 'normal':
+                return 'w-[300px]';
+            default: 
+                break;
+        }
+    }
+
 
     return(
-        <button onClick={handleClick} className={`${getStyle(variant)} ${getColor(color)} font-bold py-2 px-4 mx-2 border-[1px] rounded border-[#00C26C]`}>
+        <button onClick={handleClick} className={`${getStyle(variant)} ${getSize(size)} ${getColor(color)} font-bold py-2 px-4 mx-2 border-[1px] rounded border-[#00C26C]`}>
             { label }
         </button>
     )
