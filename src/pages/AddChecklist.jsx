@@ -26,17 +26,11 @@ const Addchecklist = () => {
   
   const [title, setTitle] = useState("");
   const [content, createContent] = useState("");
-  const [enableTemper, setEnabledTemper] = useState(false);
-  const [name, setName] = useState("");
-  const [enableDate, setEnabledDate] = useState(false);
-  const [checkSection, setCheckSection] = useState([]);
   const [checklist, setChecklist] = useState([]);
   const [switch1, setSwitch1]=useState(false);
   const [switch2, setSwitch2]=useState(false);
   const [switch3, setSwitch3]=useState(false);
   
-  console.log("ASDFASDF", switch1, switch2, switch3);
-
   const addChecklist=()=>{
     if(title=="") {
       toast.error("Fill in the Title")
@@ -119,120 +113,11 @@ const Addchecklist = () => {
   };
 
 
-  const removeSection = (index) => {
-    const updatedSections = [...checklist];
-    updatedSections.splice(index, 1); // Remove the element at the specified index
-    setChecklist(updatedSections);
-  };
-
-  const addUserTextBox = (parentIndex) => {
-    // Find the parent section by its index
-    const updatedSections = checkSection.map((section, index) => {
-      if (index === parentIndex) {
-        // Create a new item for the data array
-        const newItem = {
-          type: 'text',
-          text: '', // You might want to initialize this with some default value or leave it empty
-          value: '',
-        };
-        // Add the new item to the data array
-        return {...section, data: [...section.data, newItem] };
-      }
-      // Return the section unchanged if it's not the parent section
-      return section;
-    });
-  
-    // Update the state with the new sections
-    setCheckSection(updatedSections);
-  };
-  
-  const handleUserTextBox = (subIndex, newValue, sectionIndex) => {
-    // Create a copy of the current checkSection state
-    const updatedSections = [...checkSection];
-  
-    // Find the section that contains the textbox to update
-    const sectionToUpdate = updatedSections[sectionIndex];
-  
-    // Find the textbox within the section to update
-    const textboxToUpdate = sectionToUpdate.data[subIndex];
-  
-    // Update the textbox text value
-    textboxToUpdate.text = newValue;
-  
-    // Update the state with the new sections
-    setCheckSection(updatedSections);
-  };
-  
-  const removeUserTextBox = (subIndex, sectionIndex) => {
-    // Create a copy of the current checkSection state
-    const updatedSections = [...checkSection];
-  
-    // Find the section that contains the textbox to remove
-    const sectionToUpdate = updatedSections[sectionIndex];
-  
-    // Filter out the textbox from the section's data array
-    const newDataArray = sectionToUpdate.data.filter((_, i) => i!== subIndex);
-  
-    // Update the section's data array with the filtered array
-    const updatedSection = {
-     ...sectionToUpdate,
-      data: newDataArray,
-    };
-  
-    // Replace the original section with the updated section in the updatedSections array
-    updatedSections[sectionIndex] = updatedSection;
-  
-    // Update the state with the new sections
-    setCheckSection(updatedSections);
-  };
-
-  const addUserOptions = (parentIndex) => {
-    // Find the parent section by its index
-    const updatedSections = checkSection.map((section, index) => {
-      if (index === parentIndex) {
-        // Create a new item for the data array
-        const newItem = {
-          type: 'option',
-          text: '', // You might want to initialize this with some default value or leave it empty
-          value: false,
-        };
-        // Add the new item to the data array
-        return {...section, data: [...section.data, newItem] };
-      }
-      // Return the section unchanged if it's not the parent section
-      return section;
-    });
-  
-    // Update the state with the new sections
-    setCheckSection(updatedSections);
-  };
 
   const handleSave = async () => {
     
     console.log(checklist, 'checklist');
 
-    // const isEmptychecklist = checklist.some((item) => item.text === '');
-    // // Check if all titles are empty
-    // const allTitlesEmpty = checkSection.some(section => section.title.trim() === '');
-
-    // // Check if any textarea value in checkchecklist is empty
-    // if (content && name === ''){
-    //   toast.error('Please fill in name before saving.');
-    //   return;
-    // }
-    // if (title === '') {
-    //   toast.error('Please fill in title before saving.');
-    //   return;
-    // }
-    // if (allTitlesEmpty) {
-    //   // If any textarea is empty, show an alert or perform necessary action
-    //   toast.error('Please fill in section before saving.');
-    //   return; // Prevent further execution
-    // }
-    // if (isEmptychecklist) {
-    //   toast.error('Please fill in checklist before saving.');
-    //   return;
-    // }
     const data = {
       // 'title': title,
       // 'textbox': content,
@@ -277,7 +162,7 @@ const Addchecklist = () => {
       </div>
       
       <div className="flex w-full border-t-2">
-        <div className="shadow-xl p-5 w-[50%] ml-10 my-3">
+        <div className="shadow-xl p-5 w-[500px] ml-10 my-3">
           <div>
             <label htmlFor="title" className="block mt-10 uppercase font-medium leading-6 text-gray-900">
               checklist task title
@@ -310,7 +195,7 @@ const Addchecklist = () => {
 
           <div className="mt-2">
             <div className="my-5">
-              <ButtonCheck handleClick={()=>addChecklist()} size="primary" color="secondary" variant="secondary" label="Add task" />
+              <ButtonCheck handleClick={()=>addChecklist()} size="primary" color="secondary" variant="secondary" label="Add task to checklist" />
               <ButtonCheck handleClick={() => addSection()} size="primary" color="secondary" variant="secondary" label="Add Section" />
             </div>
             <hr />
@@ -318,7 +203,7 @@ const Addchecklist = () => {
         </div>
 
 {/* *********************************************************************************************************************************** */}
-        <div className="px-5 w-[50%] mx-auto">
+        <div className="px-5 w-[500px] mx-auto">
           <div className="shadow-xl p-3 mx-auto mt-3">
             {
               checklist.map((value, index) => {
@@ -406,10 +291,9 @@ const Addchecklist = () => {
               {
                 switch1 && (
                   <div className="my-2">
-                    <input
-                      id="name" name="name" type="text"
+                    <input type="text"
                       className="block w-full bg-[#e3e3e3] rounded-md border-0 p-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      value={name} 
+                      defaultValue=""
                     />
                   </div>
                 )

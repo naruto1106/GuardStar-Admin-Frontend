@@ -23,6 +23,12 @@ const EditChecklist = () => {
   const [checkSection, setCheckSection] = useState([]);
   const [taskChecklist, setTaskChecklist] = useState([]);
 
+  const [checklist, setChecklist] = useState([]);
+  const [content, createContent] = useState("");
+  const [switch1, setSwitch1]=useState(false);
+  const [switch2, setSwitch2]=useState(false);
+  const [switch3, setSwitch3]=useState(false);
+
   useEffect(()=> {
     const fetchData = async() => {
       const response = await dispatch(getEditChecklist(id));
@@ -38,6 +44,30 @@ const EditChecklist = () => {
     }
     fetchData()
   }, [])
+
+  const addChecklist=()=>{
+    if(title=="") {
+      toast.error("Fill in the Title")
+    }else{
+    const data={
+      'title'   : title,
+      'content' : content,
+      'status'  : true
+    }
+    setChecklist([...checklist, data])
+    setTitle("");
+    createContent("");
+    setSwitch1("");
+    setSwitch2("");
+    setSwitch3("");
+  }
+  }
+
+  const removechecklist = (index) => {
+    const updatedchecklist = [...checklist];
+    updatedchecklist.splice(index, 1); // Remove the element at the specified index
+    setChecklist(updatedchecklist);
+  };
 
   const addTaskChecklist = () => {
     let data = {
@@ -64,6 +94,49 @@ const EditChecklist = () => {
     }
     setCheckSection([...checkSection, data]);
   };
+
+  
+  const switchText=()=>{
+    if(switch2!=switch3) {
+      toast.error("You can select one at once.");
+    }else {
+    if(switch1) {
+      setSwitch1(false);
+    }
+    else {
+      setSwitch1(true);
+      createContent("textbox");
+    }
+  }
+  }
+  
+  const switchTemp=()=>{
+    if(switch1!=switch3) {
+      toast.error("You can select one at once.");
+    }else {
+    if(switch2) {
+      setSwitch2(false);
+    }
+    else {
+      setSwitch2(true);
+      createContent("*Record Fridge Temperatures Automatically*");
+    }
+  }
+  }
+
+  const switchTime=()=>{
+    if(switch2!=switch1) {
+      toast.error("You can select one at once.");
+    }else {
+    if(switch3) {
+      setSwitch3(false);
+    }
+    else {
+      setSwitch3(true);
+      createContent("*Record Time & Date Automatically*");
+    }
+  }
+  }
 
   const handleSection = (index, value) => {
     const updatedSections = [...checkSection];
@@ -218,231 +291,139 @@ const EditChecklist = () => {
 
   return (
     <>
-       <div className="mt-[20px] flex justify-between pb-5 items-center border-b-2 border-grey">
-        <div >
-          <h2 className="font-bold text-[25px] uppercase"> Edit Checklist</h2>
+      <div className="mt-[20px] flex justify-between pb-5 items-center border-b-2 border-grey">
+        <div>
+          <h2 className="font-bold text-[25px] uppercase"> {checkType == 'open' ? 'Opening' : 'Closing'} checklist</h2>
         </div>
         <div>
           <ButtonCheck handleClick={() => handleCancel()} color="secondary" variant="secondary" label="Cancel" />
           <ButtonCheck handleClick={() => handleSave()} color="primary" variant="primary" label="Save" />
         </div>
       </div>
-      <div className="flex">
-        <div className="shadow-xl p-5 w-[600px] mx-auto my-3">
+      
+      <div className="flex w-full border-t-2">
+        <div className="shadow-xl p-5 w-[500px] ml-10 my-3">
           <div>
             <label htmlFor="title" className="block mt-10 uppercase font-medium leading-6 text-gray-900">
-              Checklist task title
+              checklist task title
             </label>
             <div className="mt-2">
-              <input
-                id="title"
-                name="title"
-                type="text"
+              <input id="title" name="title" type="text"
                 className="block w-full rounded-md border-0 p-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
+                value={title} onChange={(e) => setTitle(e.target.value)}/>
             </div>
           </div>
+          
           <div className="flex justify-between my-5">
-            <p className="uppercase text-[18px] bold">Name of User</p>
-            <Switch
-              checked={enableName}
-              onChange={setEnabledName}
-              className={`${enableName ? 'bg-greenSwitch' : 'bg-gray-200'
-                } relative inline-flex h-6 w-11 items-center rounded-full`}
-            >
-
-              <span
-                className={`${enableName ? 'translate-x-6' : 'translate-x-1'
-                  } inline-block h-4 w-4 transform rounded-full bg-white transition`}
-              />
+            <p className="uppercase text-[18px] bold">Add Textbox</p>
+            <Switch checked={switch1} onChange={switchText} className={`${switch1 ? 'bg-greenSwitch' : 'bg-gray-200'} relative inline-flex h-6 w-11 items-center rounded-full`}>
+              <span className={`${switch1 ? 'translate-x-6' : 'translate-x-1' } inline-block h-4 w-4 transform rounded-full bg-white transition`} />
             </Switch>
           </div>
-          {
-            enableName && (
-              <div className="">
-                <label htmlFor="name" className="block uppercase leading-6 text-gray-900">
-                  Name
-                </label>
-                <div className="mt-2">
-                  <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    className="block w-full rounded-md border-0 p-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                </div>
-              </div>
-            )
-          }
+          <div className="flex justify-between my-5">
+            <p className="uppercase text-[18px] bold">Record temperatures</p>
+            <Switch checked={switch2} onChange={switchTemp} className={`${switch2 ? 'bg-greenSwitch' : 'bg-gray-200' } relative inline-flex h-6 w-11 items-center rounded-full`}>
+              <span className={`${switch2 ? 'translate-x-6' : 'translate-x-1' } inline-block h-4 w-4 transform rounded-full bg-white transition`}/>
+            </Switch>
+          </div>
           <div className="flex justify-between my-5">
             <p className="uppercase text-[18px] bold">Record Time & Date</p>
-            <Switch
-              checked={enableDate}
-              onChange={setEnabledDate}
-              className={`${enableDate ? 'bg-greenSwitch' : 'bg-gray-200'
-                } relative inline-flex h-6 w-11 items-center rounded-full`}
-            >
-
-              <span
-                className={`${enableDate ? 'translate-x-6' : 'translate-x-1'
-                  } inline-block h-4 w-4 transform rounded-full bg-white transition`}
-              />
+            <Switch checked={switch3} onChange={switchTime} className={`${switch3 ? 'bg-greenSwitch' : 'bg-gray-200'} relative inline-flex h-6 w-11 items-center rounded-full`}>
+              <span className={`${switch3 ? 'translate-x-6' : 'translate-x-1' } inline-block h-4 w-4 transform rounded-full bg-white transition`} />
             </Switch>
           </div>
+
           <div className="mt-2">
             <div className="my-5">
-              <ButtonCheck handleClick={() => addTaskChecklist()} color="secondary" variant="secondary" label="Add task to checklist" />
-              <ButtonCheck handleClick={() => addSection()} color="secondary" variant="secondary" label="Add Section" />
-            </div>
-            <div className="my-5 ">
-              {taskChecklist && taskChecklist.length > 0 && taskChecklist.map((value, index) => (
-                <div className="mt-2 flex justify-between items-center" key={index}>
-                  <textarea
-                    id={`taskChecklist${index}`}
-                    name={`taskChecklist${index}`}
-                    rows={1}
-                    className="block w-full rounded-md border-0 p-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    value={value.text}
-                    onChange={(e) => handleTaskChecklist(index, e.target.value)}
-                  />
-                  <Icon
-                    icon="mi:delete"
-                    className="ml-5 text-[#13ae77] text-[20px]"
-                    onClick={() => removeTaskChecklist(index)} 
-                  />
-                </div>
-                
-              ))}
+              <ButtonCheck handleClick={()=>addChecklist()} size="primary" color="secondary" variant="secondary" label="Add task" />
+              <ButtonCheck handleClick={() => addSection()} size="primary" color="secondary" variant="secondary" label="Add Section" />
             </div>
             <hr />
-            <div className="my-5">
-              <h1 className="">Section</h1>
-              {checkSection && checkSection.length > 0 && checkSection.map((sectionItem, index) => (
-                <div key={index}>
-                  <div className="mt-2 flex justify-between items-center">
-                    <input
-                      type="text"
-                      id={`addSection${index}`}
-                      name={`addSection${index}`}
-                      className="block w-full rounded-md border-0 p-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      value={sectionItem.title}
-                      onChange={(e) => handleSection(index, e.target.value)}
-                    />
-                    <Icon
-                      icon="mi:delete"
-                      className="ml-5 text-[#13ae77] text-[20px]"
-                      onClick={() => removeSection(index)} 
-                    />
-                  </div>
-                  <div className="mt-2">
-                    {
-                      sectionItem.data && sectionItem.data.length > 0 && sectionItem.data.map((sectionData, subIndex) => (
-                        <div className="mt-2 flex justify-between items-center" key={subIndex}>
-                          <input
-                            type="text"
-                            id={`addSectionText${subIndex}`}
-                            name={`addSectionText${subIndex}`}
-                            className="block w-full rounded-md border-0 p-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                            value={sectionData.text}
-                            onChange={(e) => handleUserTextBox(subIndex, e.target.value, index)}
-                          />
-                          <Icon
-                            icon="mi:delete"
-                            className="ml-5 text-[#13ae77] text-[20px]"
-                            onClick={() => removeUserTextBox(subIndex, index)} 
-                          />
-                        </div>
-                      ))
-                    }
-                  </div>
-                  <div className="my-2">
-                    <ButtonCheck handleClick={() => addUserTextBox(index)} color="secondary" variant="secondary" label="Add User TextBox" />
-                    <ButtonCheck handleClick={() => addUserOptions(index)} color="secondary" variant="secondary" label="Add User Options" />
-                  </div>
-                </div>
-              ))}
-            </div>
-            </div>
+          </div>
         </div>
-        <div className="p-5 w-[450px] mx-auto my-3">
-            <div className="shadow-xl p-5 w-[450px] mx-auto my-3"> 
-              <h1 className="font-bold text-center break-words"> { title } </h1>
-              <div className="my-5">
-                {taskChecklist && taskChecklist.length > 0 && taskChecklist.map((checkItem, index) => {
-                  if(checkItem.text != '')
-                  return (
-                    <div className={`flex justify-between items-center py-5 `} key={index}>
-                      <span className="text-[18px] w-[200px] truncate"> {checkItem.text} </span>
-                      <div className="flex justify-between items-center ">
-                        <div className="text-right">
-                          {enableDate && (
-                            <p className="w-[150px]">{moment(new Date()).format('DD.MM.YYYY HH:mm')}</p>
-                          )}
-                          {enableName && (
-                            <p> {name} </p>
-                          )}
+
+{/* *********************************************************************************************************************************** */}
+        <div className="px-5 w-[500px] mx-auto">
+          <div className="shadow-xl p-3 mx-auto mt-3">
+            {
+              checklist.map((value, index) => {
+                if(value.content=="textbox") {
+                  return(
+                    <div className="bg-[#e3e3e3] px-3 my-3" key={`1${index}`}>
+                      <div className="grid grid-cols-10 items-end flex justify-between" key={`2${index}`}>
+                        <div className="col-span-9" key={`3${index}`}>
+                          <h1 key={`h1${index}`} className="text-xl uppercase break-words m-1">{value.title}</h1>
+                          <textarea disabled key={`textarea${index}`} id={`textarea${index}`} name={`checklist${index}`} rows={1}
+                            className="bg-[#e3e3e3] block w-full rounded-md border-1 p-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            />
+                          </div>  
+                        <div key={`4${index}`}>
+                          <Icon key={`icon${index}`} icon="mi:delete" className="mx-3 text-[#13ae77] text-[22px]" onClick={() => removechecklist(index)} />
                         </div>
-                        <Checkbox  />
                       </div>
-                    </div>
-                  )
-                })}
-              </div>
-              <div className="my-2">
-              {checkSection && checkSection.length > 0 && checkSection.map((sectionItem, index) => {
-                if(sectionItem.title){
-                  return (
-                    <div key={index}>
-                      <div className="my-2" >
-                        <h1 className="truncate">{sectionItem.title}</h1>
-                        <div className="w-full mt-2 h-[2px] bg-[#E5E7EB]"></div>                    
-                      </div>
-                      <div className="mt-2">
-                      {
-                        sectionItem.data && sectionItem.data.length > 0 && sectionItem.data.map((sectionData, subIndex) => {
-                          // Check if sectionData.text is not empty
-                          if (sectionData.text.trim()!== '') {
-                            if(sectionData.type == 'text'){
-                              return (
-                                <div className="mt-2 " key={subIndex}>
-                                  <p className="truncate"> {sectionData.text} </p>
-                                  <button className="block w-full mt-2 rounded-md border-0 p-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                    &nbsp;
-                                  </button>
-                                </div>
-                              )
-                            } else {
-                              return (
-                                <div className="mt-2 " key={subIndex}>
-                                  <p className="truncate"> {sectionData.text} </p>
-                                  <button className="block w-full mt-2 rounded-md border-0 p-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                    Yes
-                                  </button>
-                                  <button className="block w-full mt-2 rounded-md border-0 p-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                    No
-                                  </button>
-                                </div>
-                              )
-                            }
-                          }
-                        })
-                      }
+                      <div className="flex justify-center py-3" key={`5${index}`}>
+                        <Checkbox key={`checkbox${index}`} onChange={(e)=>e.preventDefault()} checked={true}/>
                       </div>
                     </div>
                   )
                 }
-                
+                if(value.content=="*Record Fridge Temperatures Automatically*") {
+                  return(
+                    <div className="bg-[#e3e3e3] px-3 my-3" key={`1${index}`}>
+                      <div className="grid grid-cols-10 items-end flex justify-between" key={`2${index}`}>
+                        <div className="col-span-9" key={`3${index}`}>
+                          <h1 key={`h1${index}`} className="text-xl uppercase break-words m-1">{value.title}</h1>
+                          <textarea disabled key={`textarea${index}`} id={`textarea${index}`} name={`checklist${index}`} rows={2}
+                            className="bg-[#e3e3e3] w-full text-xl text-center border-hidden p-3" value={value.content} />
+                          </div>  
+                        <div key={`4${index}`}>
+                          <Icon key={`icon${index}`} icon="mi:delete" className="mx-3 text-[#13ae77] text-[22px]" onClick={() => removechecklist(index)} />
+                        </div>
+                      </div>
+                      <div className="flex justify-center py-3" key={`5${index}`}>
+                        <Checkbox key={`checkbox${index}`} onChange={(e)=>e.preventDefault()} checked={true}/>
+                      </div>
+                    </div>
+                  )
+                }
+                if(value.content=="*Record Time & Date Automatically*") {
+                  return(
+                    <div className="bg-[#e3e3e3] px-3 my-3" key={`1${index}`}>
+                      <div className="grid grid-cols-10 items-end flex justify-between" key={`2${index}`}>
+                        <div className="col-span-9" key={`3${index}`}>
+                          <h1 key={`h1${index}`} className="text-xl uppercase break-words m-1">{value.title}</h1>
+                          <textarea disabled key={`textarea${index}`} id={`textarea${index}`} name={`checklist${index}`} rows={2}
+                            className="bg-[#e3e3e3] w-full text-xl text-center border-hidden p-3" value={value.content} />
+                          </div>  
+                        <div key={`4${index}`}>
+                          <Icon key={`icon${index}`} icon="mi:delete" className="mx-3 text-[#13ae77] text-[22px]" onClick={() => removechecklist(index)} />
+                        </div>
+                      </div>
+                      <div className="flex justify-center py-3" key={`5${index}`}>
+                        <Checkbox key={`checkbox${index}`} onChange={(e)=>e.preventDefault()} checked={true}/>
+                      </div>
+                    </div>
+                  )
+                }
+                if(value.title=="") {
+                  return(
+                    <div className="bg-[#e9f5f5] grid grid-cols-10 items-center flex justify-between px-3 my-3" key={`1${index}`}>
+                        <div className="col-span-9" key={`3${index}`}>
+                          <h1 key={`h1${index}`} className="text-xl uppercase break-words m-1"></h1>
+                          <textarea disabled key={`textarea${index}`} id={`textarea${index}`} name={`checklist${index}`} rows={2}
+                            className="bg-[#e9f5f5] w-full text-xl text-center border-hidden p-3" value={value.content} />
+                          </div>  
+                        <div key={`4${index}`}>
+                          <Icon key={`icon${index}`} icon="mi:delete" className="mx-3 text-[#13ae77] text-[22px]" onClick={() => removechecklist(index)} />
+                        </div>
+                    </div>
+                  )
+                }
               })}
-              </div>
             </div>
+          </div>
         </div>
-          
-      </div>
-    </>
+      </>
   )
 }
 
