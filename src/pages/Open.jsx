@@ -212,9 +212,12 @@ const Open = () => {
           <h2 className="font-bold text-[25px]">Opening Checklist</h2>
         </div>
         <div>
-          {/* <ButtonCheck color="secondary" variant="secondary" label="Cancel" /> */}
-          <ButtonCheck handleClick={() => handleAdd()} color="secondary" variant="secondary" label="Add" />
-          {/* <ButtonCheck color="primary" variant="primary" label="Save" /> */}
+          {
+            openingList && openingList.length>0 && openingList.map((item) =>(
+              <ButtonCheck handleClick={() => handleEditChange(item._id)} color="secondary" variant="secondary" label="Edit checklist" />
+            ))
+          }
+          
         </div>
       </div>
       <div className="border-t-2 border-l-2 border-grey py-5 px-8">
