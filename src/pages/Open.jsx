@@ -20,7 +20,6 @@ const Open = () => {
   const [openingList, setOpeningList] = useState([]);
   const [visibleItemIndex, setVisibleItemIndex] = useState(null);
   const [userId, setUserId] = useState('');
-  const [pdata, dataset]=useState([])
 
    useEffect(()  =>   { 
     if (getOpeningCheck) {
