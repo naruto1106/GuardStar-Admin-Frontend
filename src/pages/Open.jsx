@@ -20,10 +20,13 @@ const Open = () => {
   const [openingList, setOpeningList] = useState([]);
   const [visibleItemIndex, setVisibleItemIndex] = useState(null);
   const [userId, setUserId] = useState('');
+  const [pdata, dataset]=useState([])
 
-  console.log("ASDFASDF", openingList);
+  if(openingList && openingList.length>0) {
+    console.log("sdfasdf", openingList);
+  }
 
-  useEffect(() => {
+   useEffect(()  =>   { 
     if (getOpeningCheck) {
       setOpeningList(getOpeningCheck);
       const initialCheckedList = getOpeningCheck.filter(item => item.status).map(item => item._id);
@@ -144,54 +147,53 @@ const Open = () => {
       </div>
       <div className="border-t-2 border-l-2 border-grey py-5 px-8">
         {
-          openingList && openingList.length > 0 ? (openingList.map((item, index) => (
+          ( openingList && openingList.length>0 ? ( openingList.map((item, index) => (
             <div key={index} className={`${index !== openingList.length - 1 ? 'border-b-2 border-grey' : ''}`}>
               <div className={`flex justify-between items-center py-5 `}>
-                <span className="text-[18px] w-[400px]"> {item.title} </span>
+                <span className="text-[18px] w-[400px]"> {item.checklist[0].title} </span>
                 <div className="flex justify-between items-center">
                   <div className="text-right">
-                    {item.enableDate && (
                       <p>{moment(item.date).format('DD.MM.YYYY HH:mm')}</p>
-                    )}
-                    {item.enableName && (
-                      <p> {item.name} </p>
-                    )}
+                      <p> {item.checklist[0].content} </p>
                   </div>
                   <Checkbox id={item._id} label="" checked={checkedList.includes(item._id)} onChange={() => handleCheckboxChange(item._id, index)} />
                   <FaEdit className="cursor-pointer" onClick={() => handleEditChange(item._id)} />
-                  {visibleItemIndex === index ? (
+                  {
+                  visibleItemIndex === index ? (
                     <IoIosArrowUp className="text-[20px] cursor-pointer mx-2" onClick={() => setVisibleItemIndex(null)} />
                   ) : (
                     <IoIosArrowDown className="text-[20px] cursor-pointer mx-2" onClick={() => setVisibleItemIndex(index)} />
                   )}
                 </div>
               </div>
+
               <div className="p-3">
                 {
                   visibleItemIndex === index ? (
                     <>
-                      {item.taskChecklist && item.taskChecklist.length > 0 && item.taskChecklist.map((checkItem, subIndex) => {
+                      {
+                      item.checklist && item.checklist.length > 0 && item.checklist.map((checkItem, subIndex) => {
                         if (checkItem.text != '')
                           return (
                             <div key={subIndex} className={`flex justify-between items-center py-5 `}>
-                              <span className="text-[18px] w-[400px]"> {checkItem.text} </span>
+                              <span className="text-[18px] w-[400px]"> {checkItem.title} </span>
                               <div className="flex justify-between items-center">
                                 <div className="text-right">
-                                  {item.enableDate && (
+                                  {/* {item.enableDate && ( */}
                                     <p>{moment(item.date).format('DD.MM.YYYY HH:mm')}</p>
-                                  )}
-                                  {item.enableName && (
-                                    <p> {item.name} </p>
-                                  )}
+                                  {/* )} */}
+                                  {/* {item.enableName && ( */}
+                                    <p> {checkItem.title} </p>
+                                  {/* )} */}
                                 </div>
                                 <Switch
-                                  checked={checkItem.value}
-                                  onChange={(e) => handleChecklistChange(index, checkItem.text, e, subIndex)}
-                                  className={`${checkItem.value ? 'bg-greenSwitch' : 'bg-gray-200'
+                                  checked={checkItem.status}
+                                  onChange={(e) => handleChecklistChange(index, checkItem.content, e, subIndex)}
+                                  className={`${checkItem.status ? 'bg-greenSwitch' : 'bg-gray-200'
                                     } relative inline-flex h-6 w-11 items-center rounded-full`}
                                 >
                                   <span
-                                    className={`${checkItem.value ? 'translate-x-6' : 'translate-x-1'
+                                    className={`${checkItem.status ? 'translate-x-6' : 'translate-x-1'
                                       } inline-block h-4 w-4 transform rounded-full bg-white transition`}
                                   />
                                 </Switch>
@@ -200,58 +202,7 @@ const Open = () => {
                             </div>
                           )
                       })}
-                      {item.checkSection && item.checkSection.length > 0 && item.checkSection.map((sectionItem, parentIndex) => (
-                        <div key={parentIndex}>
-                          <div className="flex mt-1 rounded border-b-2 border-pdfGray bg-pdfGray">
-                            <div className="w-9/10 p-2 px-3 text-justify">
-                              <span className="text-[14px]"> {sectionItem.title} </span>
-                            </div>
-                          </div>
-
-                          <div className="mt-2">
-                            {
-                              sectionItem.data && sectionItem.data.length > 0 && sectionItem.data.map((sectionData, subIndex) => {
-                                // Check if sectionData.text is not empty
-                                if (sectionData.text.trim() !== '') {
-                                  if (sectionData.type == 'text') {
-                                    return (
-                                      <div className="flex justify-between items-center my-1" key={subIndex}>
-                                        <span className="text-[14px] w-[450px]">{sectionData.text}</span>
-                                        <input
-                                          id={`editUserText-${subIndex}`}
-                                          name={`editUserText-${subIndex}`}
-                                          type="text"
-                                          value={sectionData.value}
-                                          className="block sm  rounded-md border-0 p-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                          onChange={(e) => handleUserTextChange(index, sectionData.text, e.target.value, parentIndex, subIndex)}
-                                        />
-                                      </div>
-                                    )
-                                  } else {
-                                    return (
-                                      <div className="flex justify-between items-center my-1" key={subIndex}>
-                                        <span className="text-[14px] w-[450px]">{sectionData.text}</span>
-                                        <Switch
-                                          checked={sectionData.value}
-                                          onChange={(e) => handleUserTextChange(index, sectionData.text, e, parentIndex, subIndex)}
-                                          className={`${sectionData.value ? 'bg-greenSwitch' : 'bg-gray-200'
-                                            } relative inline-flex h-6 w-11 items-center rounded-full`}
-                                        >
-                                          <span
-                                            className={`${sectionData.value ? 'translate-x-6' : 'translate-x-1'
-                                              } inline-block h-4 w-4 transform rounded-full bg-white transition`}
-                                          />
-                                        </Switch>
-                                      </div>
-                                    )
-                                  }
-                                }
-                              })
-                            }
-                          </div>
-
-                        </div>
-                      ))}
+                      
 
                     </>
                   ) : ''
@@ -259,14 +210,13 @@ const Open = () => {
 
               </div>
             </div>
-          ))) : (
+          ))):
+          (
             <h2 className="font-bold text-center text-[18px]">There is no data.</h2>
-          )
+          ))
         }
       </div>
-
     </>
-
   )
 }
 

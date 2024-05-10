@@ -35,11 +35,22 @@ const Addchecklist = () => {
     if(title=="") {
       toast.error("Fill in the Title")
     }else{
-    const data={
-      'title'   : title,
-      'content' : content,
-      'status'  : true
-    }
+      let type = "option"; 
+      if(switch1) {
+        type = "textbox";
+      } 
+      if(switch2) {
+        type = "re_temp";
+      } 
+      if(switch3) {
+        type = "re_time";
+      } 
+      const data={
+        'type'    : type,
+        'title'   : title,
+        'content' : content,
+        'status'  : false
+      }
     setChecklist([...checklist, data])
     setTitle("");
     createContent("");
@@ -56,9 +67,10 @@ const Addchecklist = () => {
     }else{
     addChecklist('hidden');
     const data={
+      'type'    : 'section',
       'title'   : "",
       'content' : title,
-      'status'  : true
+      'status'  : false
     }
     setChecklist([...checklist, data]);
   }
