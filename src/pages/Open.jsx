@@ -22,10 +22,6 @@ const Open = () => {
   const [userId, setUserId] = useState('');
   const [pdata, dataset]=useState([])
 
-  if(openingList && openingList.length>0) {
-    console.log("sdfasdf", openingList);
-  }
-
    useEffect(()  =>   { 
     if (getOpeningCheck) {
       setOpeningList(getOpeningCheck);
@@ -124,13 +120,90 @@ const Open = () => {
     
   };
 
+  const handleTemperatureChange = (id, index, subIndex, checkStatus) => {
+    const updatedOpeningList = openingList.map(item => ({ ...item }));
+    const item = updatedOpeningList[index];
+    const updatedChecklist = item.checklist.map((checkItem, i) => {
+      if (subIndex === i) {
+        return { ...checkItem, status: checkStatus };
+      }
+      return checkItem;
+    });
+    item.checklist = updatedChecklist;
+    updatedOpeningList[index] = item;
+    setOpeningList(updatedOpeningList);
+    const data = {
+      "id": id,
+      "checklist": item.checklist,
+    }
+    dispatch(updateChecklistStatus(data))
+  }
+
+  const handleTextBoxChange = (id, index, subIndex, setContent, checkStatus) => {
+    const updatedOpeningList = openingList.map(item => ({ ...item }));
+    const item = updatedOpeningList[index];
+    const updatedChecklist = item.checklist.map((checkItem, i) => {
+      if (subIndex === i) {
+        return { ...checkItem, status: checkStatus, content: setContent };
+      }
+      return checkItem;
+    });
+    item.checklist = updatedChecklist;
+    updatedOpeningList[index] = item;
+    setOpeningList(updatedOpeningList);
+    const data = {
+      "id": id,
+      "checklist": item.checklist,
+    }
+    dispatch(updateChecklistStatus(data))
+  }
+
+  const handleOptionChange = (id, index, subIndex, checkStatus) => {
+    const updatedOpeningList = openingList.map(item => ({ ...item }));
+    const item = updatedOpeningList[index];
+    const updatedChecklist = item.checklist.map((checkItem, i) => {
+      if (subIndex === i) {
+        return { ...checkItem, status: checkStatus };
+      }
+      return checkItem;
+    });
+    item.checklist = updatedChecklist;
+    updatedOpeningList[index] = item;
+    setOpeningList(updatedOpeningList);
+    const data = {
+      "id": id,
+      "checklist": item.checklist,
+    }
+    dispatch(updateChecklistStatus(data))
+  }
+  const handleTimeChange = (id, index, subIndex, checkStatus) => {
+    const updatedOpeningList = openingList.map(item => ({ ...item }));
+    const item = updatedOpeningList[index];
+    const updatedChecklist = item.checklist.map((checkItem, i) => {
+      if (subIndex === i) {
+        return { ...checkItem, status: checkStatus };
+      }
+      return checkItem;
+    });
+    item.checklist = updatedChecklist;
+    updatedOpeningList[index] = item;
+    setOpeningList(updatedOpeningList);
+    const data = {
+      "id": id,
+      "checklist": item.checklist,
+    }
+    dispatch(updateChecklistStatus(data))
+  }
+
+  
+
 
 
 
   const handleEditChange = async (id) => {
     navigate(`/editchecklist/open/${id}`)
   }
-
+  console.log(openingList,'openingList');
 
   return (
     <>
@@ -153,11 +226,9 @@ const Open = () => {
                 <span className="text-[18px] w-[400px]"> {item.checklist[0].title} </span>
                 <div className="flex justify-between items-center">
                   <div className="text-right">
-                      <p>{moment(item.date).format('DD.MM.YYYY HH:mm')}</p>
-                      <p> {item.checklist[0].content} </p>
+                      <p>{ index == 0 ? moment(item.date).format('DD.MM.YYYY HH:mm') : ''}</p>
                   </div>
-                  <Checkbox id={item._id} label="" checked={checkedList.includes(item._id)} onChange={() => handleCheckboxChange(item._id, index)} />
-                  <FaEdit className="cursor-pointer" onClick={() => handleEditChange(item._id)} />
+                  <FaEdit className="cursor-pointer ml-5" onClick={() => handleEditChange(item._id)} />
                   {
                   visibleItemIndex === index ? (
                     <IoIosArrowUp className="text-[20px] cursor-pointer mx-2" onClick={() => setVisibleItemIndex(null)} />
@@ -173,34 +244,92 @@ const Open = () => {
                     <>
                       {
                       item.checklist && item.checklist.length > 0 && item.checklist.map((checkItem, subIndex) => {
-                        if (checkItem.text != '')
+                        if (checkItem.type == 'option'){
                           return (
-                            <div key={subIndex} className={`flex justify-between items-center py-5 `}>
-                              <span className="text-[18px] w-[400px]"> {checkItem.title} </span>
+                            <div key={subIndex} className={`flex justify-between mt-1 items-center py-3 rounded bg-[#E3E3E3]`}>
+                              <div className="px-3">
+                                <span className="text-[18px] w-[400px]"> {checkItem.title} </span>
+                              </div>
                               <div className="flex justify-between items-center">
-                                <div className="text-right">
-                                  {/* {item.enableDate && ( */}
-                                    <p>{moment(item.date).format('DD.MM.YYYY HH:mm')}</p>
-                                  {/* )} */}
-                                  {/* {item.enableName && ( */}
-                                    <p> {checkItem.title} </p>
-                                  {/* )} */}
+                                <div>
+                                     <Checkbox id={`option${index}-${subIndex}`} label="" checked={checkItem.status} onChange={(e) => handleOptionChange(item._id, index, subIndex, e.target.checked)} />
                                 </div>
-                                <Switch
-                                  checked={checkItem.status}
-                                  onChange={(e) => handleChecklistChange(index, checkItem.content, e, subIndex)}
-                                  className={`${checkItem.status ? 'bg-greenSwitch' : 'bg-gray-200'
-                                    } relative inline-flex h-6 w-11 items-center rounded-full`}
-                                >
-                                  <span
-                                    className={`${checkItem.status ? 'translate-x-6' : 'translate-x-1'
-                                      } inline-block h-4 w-4 transform rounded-full bg-white transition`}
-                                  />
-                                </Switch>
-                                
                               </div>
                             </div>
                           )
+                        }
+                        if(checkItem.type == "section"){
+                          return (
+                            <div key={subIndex} className="flex mt-1 rounded border-b-2 border-pdfGray bg-pdfGray">
+                              <div className="w-9/10 p-2 px-3 text-justify">
+                                <span className="text-[14px]"> {checkItem.content} </span>
+                              </div>
+                            </div>
+                          )
+                        }
+                        if(checkItem.type == "textbox"){
+                          return (
+                            <div key={subIndex} className={`flex justify-between mt-1 items-center py-3 rounded bg-[#E3E3E3]`}>
+                              <div className="px-3">
+                                <span className="text-[18px] w-[400px]"> {checkItem.title} </span>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <div>
+                                  <input
+                                      id={`textbox-${subIndex}`}
+                                      name={`textbox-${subIndex}`}
+                                      type="text"
+                                      value={checkItem.content}
+                                      className="block sm  rounded-md border-0 p-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                      onChange={(e) => handleTextBoxChange(item._id, index, subIndex, e.target.value, checkItem.status)}
+                                    />
+                                </div>
+                                <div>
+                                     <Checkbox id={`option${index}-${subIndex}`} label="" checked={checkItem.status} onChange={(e) => handleTextBoxChange(item._id, index, subIndex, checkItem.content, e.target.checked)} />
+                                </div>
+                              </div>
+                            </div>
+                          )
+                        }
+                        if(checkItem.type == "re_temp"){
+                          return (
+                            <div key={subIndex} className={`mt-1 py-3 rounded bg-[#E3E3E3]`}>
+                              <div className="px-3">
+                                <span className="text-[18px] w-[400px]"> {checkItem.title} </span>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <div className="px-3">
+                                  <span className="text-[18px] w-[400px]"> {checkItem.content} </span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                  <div>
+                                      <Checkbox id={`option${index}-${subIndex}`} label="" checked={checkItem.status} onChange={(e) => handleTemperatureChange(item._id, index, subIndex, e.target.checked)} />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          )
+                        }
+                        if(checkItem.type == "re_time"){
+                          return (
+                            <div key={subIndex} className={`mt-1 py-3 rounded bg-[#E3E3E3]`}>
+                              <div className="px-3">
+                                <span className="text-[18px] w-[400px]"> {checkItem.title} </span>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <div className="px-3">
+                                  <span className="text-[18px] w-[400px]"> {checkItem.content} </span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                  <div>
+                                      <Checkbox id={`option${index}-${subIndex}`} label="" checked={checkItem.status} onChange={(e) => handleTimeChange(item._id, index, subIndex, e.target.checked)} />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          )
+                        }
+                          
                       })}
                       
 

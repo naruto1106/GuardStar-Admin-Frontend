@@ -101,7 +101,7 @@ const EditChecklist = () => {
     }
     else {
       setSwitch1(true);
-      createContent("textbox");
+      createContent("");
     }
   }
   }
@@ -261,7 +261,7 @@ const EditChecklist = () => {
           <div className="shadow-xl p-3 mx-auto mt-3">
             {
               checklist.map((value, index) => {
-                if(value.content=="textbox") {
+                if(value.type=="textbox") {
                   return(
                     <div className="bg-[#e3e3e3] px-3 my-3" key={`1${index}`}>
                       <div className="grid grid-cols-10 items-end flex justify-between" key={`2${index}`}>
