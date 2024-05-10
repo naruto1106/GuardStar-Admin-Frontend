@@ -213,9 +213,11 @@ const Open = () => {
         </div>
         <div>
           {
-            openingList && openingList.length>0 && openingList.map((item) =>(
+            openingList && openingList.length>0 ? ( openingList.map((item) =>(
               <ButtonCheck handleClick={() => handleEditChange(item._id)} color="secondary" variant="secondary" label="Edit checklist" />
-            ))
+            ))) : (
+              <ButtonCheck handleClick={() => handleAdd()} color="secondary" variant="secondary" label="Add" />
+            )
           }
           
         </div>

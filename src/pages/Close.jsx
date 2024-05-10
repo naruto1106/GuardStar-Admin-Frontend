@@ -205,9 +205,13 @@ const Close = () => {
 
         </div>
         <div>
-          {/* <ButtonCheck color="secondary" variant="secondary" label="Cancel" /> */}
-          <ButtonCheck handleClick={() => handleAdd()} color="secondary" variant="secondary" label="Add" />
-          {/* <ButtonCheck color="primary" variant="primary" label="Save" /> */}
+          {
+            closingList && closingList.length>0 ? (closingList.map((item) =>(
+              <ButtonCheck handleClick={() => handleEditChange(item._id)} color="secondary" variant="secondary" label="Edit checklist" />
+            ))) : (
+              <ButtonCheck handleClick={() => handleAdd()} color="secondary" variant="secondary" label="Add" />
+            )
+          }
         </div>
       </div>
       <div className="py-5 px-8">
