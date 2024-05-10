@@ -218,7 +218,7 @@ const Close = () => {
         {
           closingList && closingList.length > 0 ? (closingList.map((item, index) => (
             <div key={index} className={`${index !== closingList.length - 1 ? 'border-b-2 border-grey' : ''}`}>
-              <div className={`flex justify-between items-center py-5 `}>
+              {/* <div className={`flex justify-between items-center py-5 `}>
                 <span className="text-[18px] w-[400px]"> {item.checklist[0].title} </span>
                 <div className="flex justify-between items-center">
                   <div className="text-right">
@@ -232,107 +232,98 @@ const Close = () => {
                     <IoIosArrowDown className="text-[20px] cursor-pointer mx-2" onClick={() => setVisibleItemIndex(index)} />
                   )}
                 </div>
-              </div>
+              </div> */}
 
               <div className="p-3">
-                {
-                  visibleItemIndex === index ? (
-                    <>
-                      {
-                      item.checklist && item.checklist.length > 0 && item.checklist.map((checkItem, subIndex) => {
-                        if (checkItem.type == 'option'){
-                          return (
-                            <div key={subIndex} className={`flex justify-between mt-1 items-center py-3 rounded bg-[#E3E3E3]`}>
-                              <div className="px-3">
-                                <span className="text-[18px] w-[400px]"> {checkItem.title} </span>
-                              </div>
-                              <div className="flex justify-between items-center">
-                                <div>
-                                     <Checkbox id={`option${index}-${subIndex}`} label="" checked={checkItem.status} onChange={(e) => handleOptionChange(item._id, index, subIndex, e.target.checked)} />
-                                </div>
+                  {
+                    item.checklist && item.checklist.length > 0 && item.checklist.map((checkItem, subIndex) => {
+                    if (checkItem.type == 'option'){
+                      return (
+                        <div key={subIndex} className={`flex justify-between mt-1 items-center py-3 rounded bg-[#E3E3E3]`}>
+                          <div className="px-3">
+                            <span className="text-[18px] w-[400px]"> {checkItem.title} </span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <div>
+                                  <Checkbox id={`option${index}-${subIndex}`} label="" checked={checkItem.status} onChange={(e) => handleOptionChange(item._id, index, subIndex, e.target.checked)} />
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    }
+                    if(checkItem.type == "section"){
+                      return (
+                        <div key={subIndex} className="flex mt-1 rounded border-b-2 border-pdfGray bg-pdfGray">
+                          <div className="w-9/10 p-2 px-3 text-justify">
+                            <span className="text-[14px]"> {checkItem.content} </span>
+                          </div>
+                        </div>
+                      )
+                    }
+                    if(checkItem.type == "textbox"){
+                      return (
+                        <div key={subIndex} className={`flex justify-between mt-1 items-center py-3 rounded bg-[#E3E3E3]`}>
+                          <div className="px-3">
+                            <span className="text-[18px] w-[400px]"> {checkItem.title} </span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <div>
+                              <input
+                                  id={`textbox-${subIndex}`}
+                                  name={`textbox-${subIndex}`}
+                                  type="text"
+                                  value={checkItem.content}
+                                  className="block sm  rounded-md border-0 p-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                  onChange={(e) => handleTextBoxChange(item._id, index, subIndex, e.target.value, checkItem.status)}
+                                />
+                            </div>
+                            <div>
+                                  <Checkbox id={`option${index}-${subIndex}`} label="" checked={checkItem.status} onChange={(e) => handleTextBoxChange(item._id, index, subIndex, checkItem.content, e.target.checked)} />
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    }
+                    if(checkItem.type == "re_temp"){
+                      return (
+                        <div key={subIndex} className={`mt-1 py-3 rounded bg-[#E3E3E3]`}>
+                          <div className="px-3">
+                            <span className="text-[18px] w-[400px]"> {checkItem.title} </span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <div className="px-3">
+                              <span className="text-[18px] w-[400px]"> {checkItem.content} </span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <div>
+                                  <Checkbox id={`option${index}-${subIndex}`} label="" checked={checkItem.status} onChange={(e) => handleTemperatureChange(item._id, index, subIndex, e.target.checked)} />
                               </div>
                             </div>
-                          )
-                        }
-                        if(checkItem.type == "section"){
-                          return (
-                            <div key={subIndex} className="flex mt-1 rounded border-b-2 border-pdfGray bg-pdfGray">
-                              <div className="w-9/10 p-2 px-3 text-justify">
-                                <span className="text-[14px]"> {checkItem.content} </span>
+                          </div>
+                        </div>
+                      )
+                    }
+                    if(checkItem.type == "re_time"){
+                      return (
+                        <div key={subIndex} className={`mt-1 py-3 rounded bg-[#E3E3E3]`}>
+                          <div className="px-3">
+                            <span className="text-[18px] w-[400px]"> {checkItem.title} </span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <div className="px-3">
+                              <span className="text-[18px] w-[400px]"> {checkItem.content} </span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <div>
+                                  <Checkbox id={`option${index}-${subIndex}`} label="" checked={checkItem.status} onChange={(e) => handleTimeChange(item._id, index, subIndex, e.target.checked)} />
                               </div>
                             </div>
-                          )
-                        }
-                        if(checkItem.type == "textbox"){
-                          return (
-                            <div key={subIndex} className={`flex justify-between mt-1 items-center py-3 rounded bg-[#E3E3E3]`}>
-                              <div className="px-3">
-                                <span className="text-[18px] w-[400px]"> {checkItem.title} </span>
-                              </div>
-                              <div className="flex justify-between items-center">
-                                <div>
-                                  <input
-                                      id={`textbox-${subIndex}`}
-                                      name={`textbox-${subIndex}`}
-                                      type="text"
-                                      value={checkItem.content}
-                                      className="block sm  rounded-md border-0 p-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                      onChange={(e) => handleTextBoxChange(item._id, index, subIndex, e.target.value, checkItem.status)}
-                                    />
-                                </div>
-                                <div>
-                                     <Checkbox id={`option${index}-${subIndex}`} label="" checked={checkItem.status} onChange={(e) => handleTextBoxChange(item._id, index, subIndex, checkItem.content, e.target.checked)} />
-                                </div>
-                              </div>
-                            </div>
-                          )
-                        }
-                        if(checkItem.type == "re_temp"){
-                          return (
-                            <div key={subIndex} className={`mt-1 py-3 rounded bg-[#E3E3E3]`}>
-                              <div className="px-3">
-                                <span className="text-[18px] w-[400px]"> {checkItem.title} </span>
-                              </div>
-                              <div className="flex justify-between items-center">
-                                <div className="px-3">
-                                  <span className="text-[18px] w-[400px]"> {checkItem.content} </span>
-                                </div>
-                                <div className="flex justify-between items-center">
-                                  <div>
-                                      <Checkbox id={`option${index}-${subIndex}`} label="" checked={checkItem.status} onChange={(e) => handleTemperatureChange(item._id, index, subIndex, e.target.checked)} />
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          )
-                        }
-                        if(checkItem.type == "re_time"){
-                          return (
-                            <div key={subIndex} className={`mt-1 py-3 rounded bg-[#E3E3E3]`}>
-                              <div className="px-3">
-                                <span className="text-[18px] w-[400px]"> {checkItem.title} </span>
-                              </div>
-                              <div className="flex justify-between items-center">
-                                <div className="px-3">
-                                  <span className="text-[18px] w-[400px]"> {checkItem.content} </span>
-                                </div>
-                                <div className="flex justify-between items-center">
-                                  <div>
-                                      <Checkbox id={`option${index}-${subIndex}`} label="" checked={checkItem.status} onChange={(e) => handleTimeChange(item._id, index, subIndex, e.target.checked)} />
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          )
-                        }
-                          
-                      })}
+                          </div>
+                        </div>
+                      )
+                    }
                       
-
-                    </>
-                  ) : ''
-                }
-
+                  })}
               </div>
             </div>
           ))) : (
