@@ -220,8 +220,8 @@ const Open = () => {
       <div className="border-t-2 border-l-2 border-grey py-5 px-8">
         {
           ( openingList && openingList.length>0 ? ( openingList.map((item, index) => (
-            <div key={index} className={`${index !== openingList.length - 1 ? 'border-b-2 border-grey' : ''}`}>
-              <div className={`flex justify-between items-center py-5 `}>
+            <div key={index} className={`${index !== openingList.length - 1 ? ' border-grey' : ''}`}>
+              {/* <div className={`flex justify-between items-center py-5 `}>
                 <span className="text-[18px] w-[400px]"> {item.checklist[0].title} </span>
                 <div className="flex justify-between items-center">
                   <div className="text-right">
@@ -235,13 +235,10 @@ const Open = () => {
                     <IoIosArrowDown className="text-[20px] cursor-pointer mx-2" onClick={() => setVisibleItemIndex(index)} />
                   )}
                 </div>
-              </div>
+              </div> */}
 
               <div className="p-3">
-                {
-                  visibleItemIndex === index ? (
-                    <>
-                      {
+              {
                       item.checklist && item.checklist.length > 0 && item.checklist.map((checkItem, subIndex) => {
                         if (checkItem.type == 'option'){
                           return (
@@ -330,11 +327,15 @@ const Open = () => {
                         }
                           
                       })}
+                {/* {
+                  visibleItemIndex === index ? (
+                    <>
+                     
                       
 
                     </>
                   ) : ''
-                }
+                } */}
 
               </div>
             </div>
