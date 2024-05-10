@@ -143,7 +143,7 @@ const Open = () => {
     const item = updatedOpeningList[index];
     const updatedChecklist = item.checklist.map((checkItem, i) => {
       if (subIndex === i) {
-        return { ...checkItem, status: checkStatus, content: setContent };
+        return { ...checkItem, status: setContent == '' ? false : checkStatus, content: setContent };
       }
       return checkItem;
     });
@@ -275,7 +275,7 @@ const Open = () => {
                                 <span className="text-[18px] w-[400px]"> {checkItem.title} </span>
                               </div>
                               <div className="flex justify-between items-center">
-                                <div className="mx-2">
+                                <div>
                                   <input
                                       id={`textbox-${subIndex}`}
                                       name={`textbox-${subIndex}`}
@@ -285,9 +285,9 @@ const Open = () => {
                                       onChange={(e) => handleTextBoxChange(item._id, index, subIndex, e.target.value, checkItem.status)}
                                     />
                                 </div>
-                                {/* <div>
+                                <div>
                                      <Checkbox id={`option${index}-${subIndex}`} label="" checked={checkItem.status} onChange={(e) => handleTextBoxChange(item._id, index, subIndex, checkItem.content, e.target.checked)} />
-                                </div> */}
+                                </div>
                               </div>
                             </div>
                           )
