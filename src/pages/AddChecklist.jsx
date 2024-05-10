@@ -11,115 +11,118 @@ import moment from 'moment';
 import Checkbox from '../components/Checkbox';
 
 
-const AddChecklist = () => {
+const Addchecklist = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const checkType = queryParams.get('checkType');
   const [userId, setUserId] = useState('');
-
+  
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('user'));
     setUserId(userData._id)
   }, [])
-
-  const [title, setTitle] = useState("New Task");
-  const [enableName, setEnabledName] = useState(false);
+  
+  const [title, setTitle] = useState("");
+  const [content, createContent] = useState("");
   const [enableTemper, setEnabledTemper] = useState(false);
-  const [enableButtons, setEnableButtons] = useState("hidden");
   const [name, setName] = useState("");
   const [enableDate, setEnabledDate] = useState(false);
   const [checkSection, setCheckSection] = useState([]);
-  const [optionCheck, setOption] = useState([]);
-  //////////////////////////////////////////
-  const [op, opset] = useState("");
-  const [te, teset] = useState("");
-  const [se, seset] = useState("");
+  const [checklist, setChecklist] = useState([]);
+  const [switch1, setSwitch1]=useState(false);
+  const [switch2, setSwitch2]=useState(false);
+  const [switch3, setSwitch3]=useState(false);
   
+  console.log("ASDFASDF", switch1, switch2, switch3);
 
-  
-  const setUserName = (val) => {
-    setName(val);
-    const data = {
-      "type"  : "username",
-      "value" : name,
-      "status": "false"
-    }
-  }
-
-  const recordTemp = () => {
-    if(enableTemper) {
-      setEnabledTemper(false);
+  const addChecklist=()=>{
+    if(title=="") {
+      toast.error("Fill in the Title")
     }else{
-      setEnabledTemper(true);
+    const data={
+      'title'   : title,
+      'content' : content,
+      'status'  : true
     }
-    const data = {
-      "type"  : "rocordTemp",
-      "value" : [],
-      "status": "false"
-    }
+    setChecklist([...checklist, data])
+    setTitle("");
+    createContent("");
+    setSwitch1("");
+    setSwitch2("");
+    setSwitch3("");
+  }
   }
 
-  const addOption = () => {
-    setEnableButtons("hidden");
-    let data = {
-      "type" : 'option',
-      "title" : "option",
-      "status": false
-    }
-    setOption([...optionCheck, data]);
-  };
-
-  const addTextbox = () => {
-    setEnableButtons('hidden');
-    let data = {
-      "type" : 'text',
-      "title" : "",
-      "status": false
-    }
-    setOption([...optionCheck, data]);
-  };
-
-  const handleOptionCheck = (index, value) => {
-    opset(value);
-    // const updatedOptionCheck = [...optionCheck];
-    // updatedOptionCheck[index] = { title: value, value: false };
-    // setOption(updatedOptionCheck);
-  };
-  const handleOptionCheck2 = (index, value) => {
-    teset(value);
-
-  }
-
-
-
-  const removeOptionCheck = (index) => {
-    const updatedOptionCheck = [...optionCheck];
-    updatedOptionCheck.splice(index, 1); // Remove the element at the specified index
-    setOption(updatedOptionCheck);
-  };
-
+    
   const addSection = () => {
-    setEnableButtons('hidden');
-    let data = {
-      "type" : 'sectionTitle',
-      "title" : "This is a Section",
+    if(title=="") {
+      toast.error("Fill in the Title")
+    }else{
+    addChecklist('hidden');
+    const data={
+      'title'   : "",
+      'content' : title,
+      'status'  : true
     }
-    setOption([...optionCheck, data]);
+    setChecklist([...checklist, data]);
+  }
+  };
+  
+  const switchText=()=>{
+    if(switch2!=switch3) {
+      toast.error("You can select one at once.");
+    }else {
+    if(switch1) {
+      setSwitch1(false);
+    }
+    else {
+      setSwitch1(true);
+      createContent("textbox");
+    }
+  }
+  }
+  
+  const switchTemp=()=>{
+    if(switch1!=switch3) {
+      toast.error("You can select one at once.");
+    }else {
+    if(switch2) {
+      setSwitch2(false);
+    }
+    else {
+      setSwitch2(true);
+      createContent("*Record Fridge Temperatures Automatically*");
+    }
+  }
+  }
+
+  const switchTime=()=>{
+    if(switch2!=switch1) {
+      toast.error("You can select one at once.");
+    }else {
+    if(switch3) {
+      setSwitch3(false);
+    }
+    else {
+      setSwitch3(true);
+      createContent("*Record Time & Date Automatically*");
+    }
+  }
+  }
+  
+  const removechecklist = (index) => {
+    const updatedchecklist = [...checklist];
+    updatedchecklist.splice(index, 1); // Remove the element at the specified index
+    setChecklist(updatedchecklist);
   };
 
-  const handleSection = (index, value) => {
-    seset(value);
-    // const updatedSections = [...checkSection];
-    // updatedSections[index].title = value;
-    // setCheckSection(updatedSections);
-  };
 
   const removeSection = (index) => {
-    const updatedSections = [...checkSection];
+    const updatedSections = [...checklist];
     updatedSections.splice(index, 1); // Remove the element at the specified index
-    setCheckSection(updatedSections);
+    setChecklist(updatedSections);
   };
 
   const addUserTextBox = (parentIndex) => {
@@ -206,40 +209,43 @@ const AddChecklist = () => {
 
   const handleSave = async () => {
     
-    const isEmptyOptionCheck = optionCheck.some((item) => item.text === '');
-    // Check if all titles are empty
-    const allTitlesEmpty = checkSection.some(section => section.title.trim() === '');
+    console.log(checklist, 'checklist');
 
-    // Check if any textarea value in checkOptionCheck is empty
-    if (enableName && name === ''){
-      toast.error('Please fill in name before saving.');
-      return;
-    }
-    if (title === '') {
-      toast.error('Please fill in title before saving.');
-      return;
-    }
-    if (allTitlesEmpty) {
-      // If any textarea is empty, show an alert or perform necessary action
-      toast.error('Please fill in section before saving.');
-      return; // Prevent further execution
-    }
-    if (isEmptyOptionCheck) {
-      toast.error('Please fill in checklist before saving.');
-      return;
-    }
+    // const isEmptychecklist = checklist.some((item) => item.text === '');
+    // // Check if all titles are empty
+    // const allTitlesEmpty = checkSection.some(section => section.title.trim() === '');
+
+    // // Check if any textarea value in checkchecklist is empty
+    // if (content && name === ''){
+    //   toast.error('Please fill in name before saving.');
+    //   return;
+    // }
+    // if (title === '') {
+    //   toast.error('Please fill in title before saving.');
+    //   return;
+    // }
+    // if (allTitlesEmpty) {
+    //   // If any textarea is empty, show an alert or perform necessary action
+    //   toast.error('Please fill in section before saving.');
+    //   return; // Prevent further execution
+    // }
+    // if (isEmptychecklist) {
+    //   toast.error('Please fill in checklist before saving.');
+    //   return;
+    // }
     const data = {
-      'title': title,
-      'enableName': enableName,
-      'name': name,
-      'enableDate': enableDate,
-      'optionCheck': optionCheck,
-      'checkSection' : checkSection,
+      // 'title': title,
+      // 'textbox': content,
+      // 'name': name,
+      // 'enableDate': enableDate,
+      'checklist': checklist,
+      // 'checkSection' : checkSection,
       'Type': checkType,
       'userId': userId,
     }
+    console.log("sadfsdf", data);
 
-    return ;
+    
     const response = await dispatch(createChecklist(data));
     if (response) {
       if (checkType == 'open') {
@@ -261,9 +267,8 @@ const AddChecklist = () => {
   return (
     <>
       <div className="mt-[20px] flex justify-between pb-5 items-center border-b-2 border-grey">
-        <div >
-          <h2 className="font-bold text-[25px] uppercase"> {checkType == 'open' ? 'Opening' : 'Closing'} Checklist</h2>
-
+        <div>
+          <h2 className="font-bold text-[25px] uppercase"> {checkType == 'open' ? 'Opening' : 'Closing'} checklist</h2>
         </div>
         <div>
           <ButtonCheck handleClick={() => handleCancel()} color="secondary" variant="secondary" label="Cancel" />
@@ -271,199 +276,158 @@ const AddChecklist = () => {
         </div>
       </div>
       
-      <div className="flex">
-        <div className="shadow-xl p-5 w-[450px] mx-auto my-3">
+      <div className="flex w-full border-t-2">
+        <div className="shadow-xl p-5 w-[50%] ml-10 my-3">
           <div>
             <label htmlFor="title" className="block mt-10 uppercase font-medium leading-6 text-gray-900">
-              Checklist task title
+              checklist task title
             </label>
             <div className="mt-2">
-              <input
-                id="title"
-                name="title"
-                type="text"
+              <input id="title" name="title" type="text"
                 className="block w-full rounded-md border-0 p-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
+                value={title} onChange={(e) => setTitle(e.target.value)}/>
             </div>
           </div>
           
           <div className="flex justify-between my-5">
-            <p className="uppercase text-[18px] bold">Name of User</p>
-            <Switch
-              checked={enableName}
-              onChange={setEnabledName}
-              className={`${enableName ? 'bg-greenSwitch' : 'bg-gray-200'
-                } relative inline-flex h-6 w-11 items-center rounded-full`}
-            >
-
-              <span
-                className={`${enableName ? 'translate-x-6' : 'translate-x-1'
-                  } inline-block h-4 w-4 transform rounded-full bg-white transition`}
-              />
+            <p className="uppercase text-[18px] bold">Add Textbox</p>
+            <Switch checked={switch1} onChange={switchText} className={`${switch1 ? 'bg-greenSwitch' : 'bg-gray-200'} relative inline-flex h-6 w-11 items-center rounded-full`}>
+              <span className={`${switch1 ? 'translate-x-6' : 'translate-x-1' } inline-block h-4 w-4 transform rounded-full bg-white transition`} />
             </Switch>
           </div>
           <div className="flex justify-between my-5">
             <p className="uppercase text-[18px] bold">Record temperatures</p>
-            <Switch
-              checked={enableTemper}
-              onChange={recordTemp}
-              className={`${enableTemper ? 'bg-greenSwitch' : 'bg-gray-200'
-                } relative inline-flex h-6 w-11 items-center rounded-full`}
-            >
-              <span
-                className={`${enableTemper ? 'translate-x-6' : 'translate-x-1'
-                  } inline-block h-4 w-4 transform rounded-full bg-white transition`}
-              />
+            <Switch checked={switch2} onChange={switchTemp} className={`${switch2 ? 'bg-greenSwitch' : 'bg-gray-200' } relative inline-flex h-6 w-11 items-center rounded-full`}>
+              <span className={`${switch2 ? 'translate-x-6' : 'translate-x-1' } inline-block h-4 w-4 transform rounded-full bg-white transition`}/>
             </Switch>
           </div>
           <div className="flex justify-between my-5">
             <p className="uppercase text-[18px] bold">Record Time & Date</p>
-            <Switch
-              checked={enableDate}
-              onChange={setEnabledDate}
-              className={`${enableDate ? 'bg-greenSwitch' : 'bg-gray-200'
-                } relative inline-flex h-6 w-11 items-center rounded-full`}
-            >
-              <span
-                className={`${enableDate ? 'translate-x-6' : 'translate-x-1'
-                  } inline-block h-4 w-4 transform rounded-full bg-white transition`}
-              />
+            <Switch checked={switch3} onChange={switchTime} className={`${switch3 ? 'bg-greenSwitch' : 'bg-gray-200'} relative inline-flex h-6 w-11 items-center rounded-full`}>
+              <span className={`${switch3 ? 'translate-x-6' : 'translate-x-1' } inline-block h-4 w-4 transform rounded-full bg-white transition`} />
             </Switch>
           </div>
 
           <div className="mt-2">
             <div className="my-5">
-              <ButtonCheck handleClick={()=>setEnableButtons("")} size="normal" color="secondary" variant="secondary" label="Add Field" />
-              {
-                // if(enableButtons) {}
-                  <div className={`${enableButtons} mt-3 absolute`}>
-                  <ButtonCheck handleClick={() => addOption()} size="normal" color="secondary" variant="secondary" label="Add Option" /><br />
-                  <ButtonCheck handleClick={() => addTextbox()} size="normal" color="secondary" variant="secondary" label="Add User Textbox" /><br />
-                  <ButtonCheck handleClick={() => addSection()} size="normal" color="secondary" variant="secondary" label="Add Section" />
-                  </div>
-              }
+              <ButtonCheck handleClick={()=>addChecklist()} size="primary" color="secondary" variant="secondary" label="Add task" />
+              <ButtonCheck handleClick={() => addSection()} size="primary" color="secondary" variant="secondary" label="Add Section" />
             </div>
             <hr />
           </div>
         </div>
 
-        {/* *********************************************************************************************************************************** */}
-        <div className="p-5 w-[600px] mx-auto my-3">
-            <div className="shadow-xl w-[450px] p-3 mx-auto mt-3"> 
-              <h1 className="text-2xl uppercase text-center break-words"> { title } </h1>
-              {
-                enableName && (
-                  <div className="shadow-xl bg-[#c3c3c3] my-3 p-5 w-full">
-                    <label htmlFor="name" className="block uppercase leading-6 text-gray-900">
-                      Name
-                    </label>
-                    <div className="my-2">
-                      <input
-                        id="name"
-                        name="name"
-                        type="text"
-                        className="block w-full rounded-md border-0 p-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        value={name}
-                        onChange={(e) => setUserName(e.target.value)}
-                      />
+{/* *********************************************************************************************************************************** */}
+        <div className="px-5 w-[50%] mx-auto">
+          <div className="shadow-xl p-3 mx-auto mt-3">
+            {
+              checklist.map((value, index) => {
+                if(value.content=="textbox") {
+                  return(
+                    <div className="bg-[#e3e3e3] px-3 my-3" key={`1${index}`}>
+                      <div className="grid grid-cols-10 items-end flex justify-between" key={`2${index}`}>
+                        <div className="col-span-9" key={`3${index}`}>
+                          <h1 key={`h1${index}`} className="text-xl uppercase break-words m-1">{value.title}</h1>
+                          <textarea disabled key={`textarea${index}`} id={`textarea${index}`} name={`checklist${index}`} rows={1}
+                            className="bg-[#e3e3e3] block w-full rounded-md border-1 p-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            />
+                          </div>  
+                        <div key={`4${index}`}>
+                          <Icon key={`icon${index}`} icon="mi:delete" className="mx-3 text-[#13ae77] text-[22px]" onClick={() => removechecklist(index)} />
+                        </div>
+                      </div>
+                      <div className="flex justify-center py-3" key={`5${index}`}>
+                        <Checkbox key={`checkbox${index}`} onChange={(e)=>e.preventDefault()} checked={true}/>
+                      </div>
                     </div>
-                    <div className="flex justify-center mt-3">
-                      <Checkbox onChange={(e)=>e.preventDefault()} checked={true}></Checkbox>
+                  )
+                }
+                if(value.content=="*Record Fridge Temperatures Automatically*") {
+                  return(
+                    <div className="bg-[#e3e3e3] px-3 my-3" key={`1${index}`}>
+                      <div className="grid grid-cols-10 items-end flex justify-between" key={`2${index}`}>
+                        <div className="col-span-9" key={`3${index}`}>
+                          <h1 key={`h1${index}`} className="text-xl uppercase break-words m-1">{value.title}</h1>
+                          <textarea disabled key={`textarea${index}`} id={`textarea${index}`} name={`checklist${index}`} rows={2}
+                            className="bg-[#e3e3e3] w-full text-xl text-center border-hidden p-3" value={value.content} />
+                          </div>  
+                        <div key={`4${index}`}>
+                          <Icon key={`icon${index}`} icon="mi:delete" className="mx-3 text-[#13ae77] text-[22px]" onClick={() => removechecklist(index)} />
+                        </div>
+                      </div>
+                      <div className="flex justify-center py-3" key={`5${index}`}>
+                        <Checkbox key={`checkbox${index}`} onChange={(e)=>e.preventDefault()} checked={true}/>
+                      </div>
                     </div>
-                  </div>
-                )
-              }
-              {
-                enableTemper && (
-                  <div className="shadow-xl bg-[#c3c3c3] my-3 p-5 w-full">
-                    <label htmlFor="name" className="block uppercase leading-6 text-gray-900">
-                      Fridge and Freezer Temperatures
-                    </label>
-                    <div className="mt-2">
-                    <p className="text-center uppercase font-bold">Record the temperatures automatically.</p>
+                  )
+                }
+                if(value.content=="*Record Time & Date Automatically*") {
+                  return(
+                    <div className="bg-[#e3e3e3] px-3 my-3" key={`1${index}`}>
+                      <div className="grid grid-cols-10 items-end flex justify-between" key={`2${index}`}>
+                        <div className="col-span-9" key={`3${index}`}>
+                          <h1 key={`h1${index}`} className="text-xl uppercase break-words m-1">{value.title}</h1>
+                          <textarea disabled key={`textarea${index}`} id={`textarea${index}`} name={`checklist${index}`} rows={2}
+                            className="bg-[#e3e3e3] w-full text-xl text-center border-hidden p-3" value={value.content} />
+                          </div>  
+                        <div key={`4${index}`}>
+                          <Icon key={`icon${index}`} icon="mi:delete" className="mx-3 text-[#13ae77] text-[22px]" onClick={() => removechecklist(index)} />
+                        </div>
+                      </div>
+                      <div className="flex justify-center py-3" key={`5${index}`}>
+                        <Checkbox key={`checkbox${index}`} onChange={(e)=>e.preventDefault()} checked={true}/>
+                      </div>
                     </div>
-                    <div className="flex justify-center mt-3">
-                      <Checkbox checked={true}/>
+                  )
+                }
+                if(value.title=="") {
+                  return(
+                    <div className="bg-[#e9f5f5] grid grid-cols-10 items-center flex justify-between px-3 my-3" key={`1${index}`}>
+                        <div className="col-span-9" key={`3${index}`}>
+                          <h1 key={`h1${index}`} className="text-xl uppercase break-words m-1"></h1>
+                          <textarea disabled key={`textarea${index}`} id={`textarea${index}`} name={`checklist${index}`} rows={2}
+                            className="bg-[#e9f5f5] w-full text-xl text-center border-hidden p-3" value={value.content} />
+                          </div>  
+                        <div key={`4${index}`}>
+                          <Icon key={`icon${index}`} icon="mi:delete" className="mx-3 text-[#13ae77] text-[22px]" onClick={() => removechecklist(index)} />
+                        </div>
                     </div>
-                  </div>
-                )
-              }
-              {
-                enableDate && (
-                  <div className="shadow-xl bg-[#c3c3c3] my-3 p-5 w-full">
-                    <label htmlFor="name" className="block uppercase leading-6 text-gray-900">
-                      Time & Date
-                    </label>
-                    <div className="mt-2">
-                    <p className="text-center uppercase font-bold">Record Date & Time automatically.</p>
-                    </div>
-                    <div className="flex justify-center mt-3">
-                      <Checkbox onChange={(e)=>e.preventDefault()} checked={true}/>
-                    </div>
-                  </div>
-                )
-              }
+                  )
+                }
+              })}
 
               {
-              optionCheck.map((value, index) => {
-                if(value.type=="option") {
-                return(
-                <div className="shadow-xl bg-[#c3c3c3] my-3 py-3 pl-3">
-                  <div className="items-end flex justify-between" key={index}>
-                    <textarea id={`optionCheck${index}`} name={`optionCheck${index}`} rows={2}
-                      className="block w-full rounded-md border-0 p-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      value={op} onChange={(e) => handleOptionCheck(index, e.target.value)} />
-                    <div>
-                      <Icon icon="mi:delete" className="mx-3 text-[#13ae77] text-[22px]" onClick={() => removeOptionCheck(index)} />
-                    </div>
+                title && (
+                  <div>
+                    <h1 className="text-2xl uppercase text-center break-words"> { title } </h1>
                   </div>
-                  <div className="flex justify-center my-3">
-                    <Checkbox onChange={(e)=>e.preventDefault()} checked={true}/>
-                  </div>
-                </div>
-              )}
-              if(value.type=="text") {
-                return(
-                  <div className="shadow-xl bg-[#c3c3c3] py-3 pl-3">
-                  <div className="items-center flex justify-between" key={index}>
-                    <div className="w-[450px]">
-                      <div className="flex justify-between">
-                        <textarea id={`optionCheck${index}`} name={`optionCheck${index}`} rows={2}
-                          className="block w-full rounded-md border-0 p-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                          value={te} onChange={(e) => handleOptionCheck2(index, e.target.value)} />
-                      </div>
-                      <div className="flex my-3">
-                        <textarea disabled id={`optionCheck${index}`} name={`optionCheck${index}`} rows={1}
-                          className="block w-full rounded-md border-0 p-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                          value={value.title} onChange={(e) => handleOptionCheck2(index, e.target.value)} />
-                      </div>
-                    </div>
-                    <div>
-                      <Icon icon="mi:delete" className="mx-3 text-[#13ae77] text-[22px]" onClick={() => removeOptionCheck(index)} />
-                    </div>
-                  </div>
-                  <div className="flex justify-center my-3">
-                    <Checkbox onChange={(e)=>e.preventDefault()} checked={true}/>
-                  </div>
-                </div>
                 )
               }
-              if(value.type=="sectionTitle") {
-                return(
-                  <div className="shadow-xl my-3 bg-[#cce6ea] p-3">
-                  <div className="mt-2 flex justify-between items-center" >
-                    <textarea id={`addSection${index}`} name={`addSection${index}`} rows={2}
-                      className="block w-full roundfd-md border-0 p-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      value={se} onChange={(e) => handleSection(index, e.target.value)}
+              {
+                switch1 && (
+                  <div className="my-2">
+                    <input
+                      id="name" name="name" type="text"
+                      className="block w-full bg-[#e3e3e3] rounded-md border-0 p-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      value={name} 
                     />
-                    <Icon icon="mi:delete" className="ml-5 text-[#13ae77] text-[22px]" onClick={() => removeSection(index)} />
                   </div>
-                </div>
                 )
               }
-              })}
+              {
+                switch2 && (
+                  <div className="my-2">
+                    <textarea disabled rows={2}className="bg-[#e3e3e3] w-full text-xl text-center border-hidden p-3"value="*Record Fridge Temperatures Automatically*" />
+                  </div>
+                )
+              }
+              {
+                switch3 && (
+                  <div className="my-2">
+                    <textarea disabled rows={2}className="bg-[#e3e3e3] w-full text-xl text-center border-hidden p-3"value="*Record Time & Date Automatically*" />
+                  </div>
+                )
+              }
             </div>
           </div>
         </div>
@@ -471,4 +435,4 @@ const AddChecklist = () => {
   )
 }
 
-export default AddChecklist;
+export default Addchecklist;
