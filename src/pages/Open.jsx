@@ -21,6 +21,8 @@ const Open = () => {
   const [visibleItemIndex, setVisibleItemIndex] = useState(null);
   const [userId, setUserId] = useState('');
 
+  console.log("ASDFASDF", openingList);
+
   useEffect(() => {
     if (getOpeningCheck) {
       setOpeningList(getOpeningCheck);
@@ -35,7 +37,6 @@ const Open = () => {
     dispatch(getOpeninglist(userData._id));
   }, [])
 
-  // console.log(openingList,'openingList');
 
   const handleCheckboxChange = (id, Index) => {
     const newCheckedList = [...checkedList];
@@ -48,8 +49,7 @@ const Open = () => {
     setCheckedList(newCheckedList);
     let status = index > -1 ? false : true;
 
-    console.log(openingList[Index].checkSection, 'checkSection');
-    console.log(openingList[Index].taskChecklist, 'taskChecklist');
+
     const data = {
       "id": id,
       "status": status,
@@ -57,7 +57,6 @@ const Open = () => {
       "taskChecklist": openingList[Index].taskChecklist,
       
     }
-    console.log(data, 'data');
     dispatch(updateChecklistStatus(data))
   };
 

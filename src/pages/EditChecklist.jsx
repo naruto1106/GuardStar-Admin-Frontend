@@ -180,7 +180,6 @@ const EditChecklist = () => {
       'checklist': checklist,
       'id': id,
     }
-    console.log(data, 'data');
     const response = await dispatch(updateChecklist(data));
     if (response) {
       if (checkType == 'open') {
