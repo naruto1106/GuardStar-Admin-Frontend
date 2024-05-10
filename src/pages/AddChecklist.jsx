@@ -153,7 +153,7 @@ const Addchecklist = () => {
     <>
       <div className="mt-[20px] flex justify-between pb-5 items-center border-b-2 border-grey">
         <div>
-          <h2 className="font-bold text-[25px] uppercase"> {checkType == 'open' ? 'Opening' : 'Closing'} checklist</h2>
+          <h2 className="font-bold text-[25px] uppercase">Add {checkType == 'open' ? 'Opening' : 'Closing'} checklist</h2>
         </div>
         <div>
           <ButtonCheck handleClick={() => handleCancel()} color="secondary" variant="secondary" label="Cancel" />
@@ -276,6 +276,25 @@ const Addchecklist = () => {
                         <div key={`4${index}`}>
                           <Icon key={`icon${index}`} icon="mi:delete" className="mx-3 text-[#13ae77] text-[22px]" onClick={() => removechecklist(index)} />
                         </div>
+                    </div>
+                  )
+                }
+                if(value.content=="") {
+                  return(
+                    <div className="bg-[#e3e3e3] px-3 my-3">
+                      <div className="bg-[#e3e3e3] grid grid-cols-10 items-center flex justify-between px-3 my-3" key={`1${index}`}>
+                          <div className="col-span-9" key={`3${index}`}>
+                            <h1 key={`h1${index}`} className="text-xl uppercase break-words m-1"></h1>
+                            <textarea disabled key={`textarea${index}`} id={`textarea${index}`} name={`checklist${index}`} rows={1}
+                              className="bg-[#e3e3e3] w-full text-xl text-center border-hidden" value={value.title} />
+                            </div>  
+                          <div key={`4${index}`}>
+                            <Icon key={`icon${index}`} icon="mi:delete" className="mx-3 text-[#13ae77] text-[22px]" onClick={() => removechecklist(index)} />
+                          </div>
+                      </div>
+                      <div className="flex justify-center pb-3" key={`5${index}`}>
+                        <Checkbox key={`checkbox${index}`} onChange={(e)=>e.preventDefault()} checked={true}/>
+                      </div>
                     </div>
                   )
                 }

@@ -28,18 +28,14 @@ const EditChecklist = () => {
   const [switch1, setSwitch1]=useState(false);
   const [switch2, setSwitch2]=useState(false);
   const [switch3, setSwitch3]=useState(false);
-
+  
+  console.log('response', checklist);
   useEffect(()=> {
     const fetchData = async() => {
       const response = await dispatch(getEditChecklist(id));
-      console.log(response, 'response');
+      const data=response[0].checklist;
       if(response) {
-        setEnabledName(response[0].enableName);
-        setName(response[0].name);
-        setEnabledDate(response[0].enableDate);
-        setTitle(response[0].title);
-        setCheckSection(response[0].checkSection);
-        setTaskChecklist(response[0].taskChecklist)
+        setChecklist(data);
       }
     }
     fetchData()
@@ -69,30 +65,18 @@ const EditChecklist = () => {
     setChecklist(updatedchecklist);
   };
 
-  const addTaskChecklist = () => {
-    let data = {
-      "text" : '',
-      "value" : false
-    }
-    setTaskChecklist([...taskChecklist, data]);
-  };
-  const handleTaskChecklist = (index, value) => {
-    const updatedTaskChecklist = [...taskChecklist];
-    updatedTaskChecklist[index] = { text: value, value: false };
-    setTaskChecklist(updatedTaskChecklist);
-  };
-  const removeTaskChecklist = (index) => {
-    const updatedTaskChecklist = [...taskChecklist];
-    updatedTaskChecklist.splice(index, 1); // Remove the element at the specified index
-    setTaskChecklist(updatedTaskChecklist);
-  };
-
   const addSection = () => {
-    let data = {
-      'title' : '',
-      'data' : []
+    if(title=="") {
+      toast.error("Fill in the Title")
+    }else{
+    addChecklist('hidden');
+    const data={
+      'title'   : "",
+      'content' : title,
+      'status'  : true
     }
-    setCheckSection([...checkSection, data]);
+    setChecklist([...checklist, data]);
+  }
   };
 
   
@@ -138,39 +122,6 @@ const EditChecklist = () => {
   }
   }
 
-  const handleSection = (index, value) => {
-    const updatedSections = [...checkSection];
-    updatedSections[index].title = value;
-    setCheckSection(updatedSections);
-  };
-
-  const removeSection = (index) => {
-    const updatedSections = [...checkSection];
-    updatedSections.splice(index, 1); // Remove the element at the specified index
-    setCheckSection(updatedSections);
-  };
-
-  const addUserTextBox = (parentIndex) => {
-    // Find the parent section by its index
-    const updatedSections = checkSection.map((section, index) => {
-      if (index === parentIndex) {
-        // Create a new item for the data array
-        const newItem = {
-          type: 'text',
-          text: '', // You might want to initialize this with some default value or leave it empty
-          value: '',
-        };
-        // Add the new item to the data array
-        return {...section, data: [...section.data, newItem] };
-      }
-      // Return the section unchanged if it's not the parent section
-      return section;
-    });
-  
-    // Update the state with the new sections
-    setCheckSection(updatedSections);
-  };
-  
   const handleUserTextBox = (subIndex, newValue, sectionIndex) => {
     // Create a copy of the current checkSection state
     const updatedSections = [...checkSection];
@@ -188,49 +139,6 @@ const EditChecklist = () => {
     setCheckSection(updatedSections);
   };
   
-  const removeUserTextBox = (subIndex, sectionIndex) => {
-    // Create a copy of the current checkSection state
-    const updatedSections = [...checkSection];
-  
-    // Find the section that contains the textbox to remove
-    const sectionToUpdate = updatedSections[sectionIndex];
-  
-    // Filter out the textbox from the section's data array
-    const newDataArray = sectionToUpdate.data.filter((_, i) => i!== subIndex);
-  
-    // Update the section's data array with the filtered array
-    const updatedSection = {
-     ...sectionToUpdate,
-      data: newDataArray,
-    };
-  
-    // Replace the original section with the updated section in the updatedSections array
-    updatedSections[sectionIndex] = updatedSection;
-  
-    // Update the state with the new sections
-    setCheckSection(updatedSections);
-  };
-
-  const addUserOptions = (parentIndex) => {
-    // Find the parent section by its index
-    const updatedSections = checkSection.map((section, index) => {
-      if (index === parentIndex) {
-        // Create a new item for the data array
-        const newItem = {
-          type: 'option',
-          text: '', // You might want to initialize this with some default value or leave it empty
-          value: false,
-        };
-        // Add the new item to the data array
-        return {...section, data: [...section.data, newItem] };
-      }
-      // Return the section unchanged if it's not the parent section
-      return section;
-    });
-  
-    // Update the state with the new sections
-    setCheckSection(updatedSections);
-  };
 
   const handleCancel = () => {
     if (checkType == 'open') {
@@ -241,40 +149,35 @@ const EditChecklist = () => {
   }
 
   const handleSave = async () => {
-    const isEmptyTaskChecklist = taskChecklist.some((item) => item.text === '');
-    // Check if all titles are empty
-    const allTitlesEmpty = checkSection.some(section => section.title.trim() === '');
+    // const isEmptyTaskChecklist = taskChecklist.some((item) => item.text === '');
+    // // Check if all titles are empty
+    // const allTitlesEmpty = checkSection.some(section => section.title.trim() === '');
 
-    // Check if any textarea value in checkTaskChecklist is empty
-    // const isEmptyTaskChecklist = taskChecklist.some((value) => value.trim() === '');
-    if (enableName && name === ''){
-      toast.error('Please fill in name before saving.');
-      return;
-    }
-    if (title === '') {
-      toast.error('Please fill in title before saving.');
-      return;
-    }
-    if (allTitlesEmpty) {
-      // If any textarea is empty, show an alert or perform necessary action
-      toast.error('Please fill in section before saving.');
-      return; // Prevent further execution
-    }
-    if (isEmptyTaskChecklist) {
-      toast.error('Please fill in checklist before saving.');
-      return;
-    }
+    // // Check if any textarea value in checkTaskChecklist is empty
+    // // const isEmptyTaskChecklist = taskChecklist.some((value) => value.trim() === '');
+    // if (enableName && name === ''){
+    //   toast.error('Please fill in name before saving.');
+    //   return;
+    // }
+    // if (title === '') {
+    //   toast.error('Please fill in title before saving.');
+    //   return;
+    // }
+    // if (allTitlesEmpty) {
+    //   // If any textarea is empty, show an alert or perform necessary action
+    //   toast.error('Please fill in section before saving.');
+    //   return; // Prevent further execution
+    // }
+    // if (isEmptyTaskChecklist) {
+    //   toast.error('Please fill in checklist before saving.');
+    //   return;
+    // }
 
 
-    return 
+    // return 
     
     const data = {
-      'title': title,
-      'enableName': enableName,
-      'name': name,
-      'enableDate': enableDate,
-      'taskChecklist': taskChecklist,
-      'checkSection' : checkSection,
+      'checklist': checklist,
       'id': id,
     }
     console.log(data, 'data');
@@ -293,7 +196,7 @@ const EditChecklist = () => {
     <>
       <div className="mt-[20px] flex justify-between pb-5 items-center border-b-2 border-grey">
         <div>
-          <h2 className="font-bold text-[25px] uppercase"> {checkType == 'open' ? 'Opening' : 'Closing'} checklist</h2>
+          <h2 className="font-bold text-[25px] uppercase">Edit {checkType == 'open' ? 'Opening' : 'Closing'} checklist</h2>
         </div>
         <div>
           <ButtonCheck handleClick={() => handleCancel()} color="secondary" variant="secondary" label="Cancel" />
@@ -416,6 +319,25 @@ const EditChecklist = () => {
                         <div key={`4${index}`}>
                           <Icon key={`icon${index}`} icon="mi:delete" className="mx-3 text-[#13ae77] text-[22px]" onClick={() => removechecklist(index)} />
                         </div>
+                    </div>
+                  )
+                }
+                if(value.content=="") {
+                  return(
+                    <div className="bg-[#e3e3e3] px-3 my-3">
+                      <div className="bg-[#e3e3e3] grid grid-cols-10 items-center flex justify-between px-3 my-3" key={`1${index}`}>
+                          <div className="col-span-9" key={`3${index}`}>
+                            <h1 key={`h1${index}`} className="text-xl uppercase break-words m-1"></h1>
+                            <textarea disabled key={`textarea${index}`} id={`textarea${index}`} name={`checklist${index}`} rows={1}
+                              className="bg-[#e3e3e3] w-full text-xl text-center border-hidden" value={value.title} />
+                            </div>  
+                          <div key={`4${index}`}>
+                            <Icon key={`icon${index}`} icon="mi:delete" className="mx-3 text-[#13ae77] text-[22px]" onClick={() => removechecklist(index)} />
+                          </div>
+                      </div>
+                      <div className="flex justify-center pb-3" key={`5${index}`}>
+                        <Checkbox key={`checkbox${index}`} onChange={(e)=>e.preventDefault()} checked={true}/>
+                      </div>
                     </div>
                   )
                 }
