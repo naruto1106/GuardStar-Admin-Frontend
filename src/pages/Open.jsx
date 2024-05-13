@@ -292,25 +292,48 @@ const Open = () => {
                             </div>
                           )
                         }
-                        if(checkItem.type == "re_temp"){
+                        if (checkItem.type === "re_temp") {
                           return (
+                            <>
                             <div key={subIndex} className={`mt-1 py-3 rounded bg-[#E3E3E3]`}>
                               <div className="px-3">
-                                <span className="text-[18px] w-[400px]"> {checkItem.title} </span>
+                                <span className="text-[18px] w-[400px]">{checkItem.title}</span>
                               </div>
                               <div className="flex justify-between items-center">
                                 <div className="px-3">
-                                  <span className="text-[18px] w-[400px]"> {checkItem.content} </span>
+                                  <span className="text-[18px] w-[400px]">{checkItem.content}</span>
                                 </div>
                                 <div className="flex justify-between items-center">
                                   <div>
-                                      <Checkbox id={`option${index}-${subIndex}`} label="" checked={checkItem.status} onChange={(e) => handleTemperatureChange(item._id, index, subIndex, e.target.checked)} />
+                                    <Checkbox
+                                      id={`option${index}-${subIndex}`}
+                                      label=""
+                                      checked={checkItem.status}
+                                      onChange={(e) =>
+                                        handleTemperatureChange(item._id, index, subIndex, e.target.checked)
+                                      }
+                                    />
                                   </div>
                                 </div>
                               </div>
+                             
                             </div>
-                          )
+                               {/* Fixed conditional rendering using && operator */}
+                               {checkItem.tempData &&
+                                checkItem.tempData.map((Data, tempIndex) => (
+                                  <div className="flex justify-between my-3 ml-5 py-2 rounded items-center bg-pdfGray" key={tempIndex}>
+                                    <div className="px-3">
+                                      <span className="text-[18px] w-[400px]">{Data.name}</span>
+                                    </div>
+                                    <div className="px-3">
+                                      <span className="text-[18px] w-[400px]">{Data.temp}</span>
+                                    </div>
+                                  </div>
+                                ))}
+                            </>
+                          );
                         }
+                        
                         if(checkItem.type == "re_time"){
                           return (
                             <div key={subIndex} className={`mt-1 py-3 rounded bg-[#E3E3E3]`}>

@@ -19,7 +19,7 @@ const Close = () => {
   const [closingList, setClosingList] = useState([]);
   const [visibleItemIndex, setVisibleItemIndex] = useState(null);
   const [userId, setUserId] = useState('');
-
+console.log(closingList,'closinglist');
   const handleAdd = () => {
     navigate('/addchecklist?checkType=close')
   }
@@ -118,6 +118,7 @@ const Close = () => {
   };
 
   const handleEditChange = async (id) => {
+    console.log(id,'id'); return;
     navigate(`/editchecklist/close/${id}`)
   }
 
@@ -206,8 +207,8 @@ const Close = () => {
         </div>
         <div>
           {
-            closingList && closingList.length>0 ? (closingList.map((item) =>(
-              <ButtonCheck handleClick={() => handleEditChange(item._id)} color="secondary" variant="secondary" label="Edit checklist" />
+            closingList && closingList.length>0 ? (closingList.map((item, index) =>(
+              <ButtonCheck key={index} handleClick={() => handleEditChange(item._id)} color="secondary" variant="secondary" label="Edit checklist" />
             ))) : (
               <ButtonCheck handleClick={() => handleAdd()} color="secondary" variant="secondary" label="Add" />
             )
@@ -286,7 +287,8 @@ const Close = () => {
                     }
                     if(checkItem.type == "re_temp"){
                       return (
-                        <div key={subIndex} className={`mt-1 py-3 rounded bg-[#E3E3E3]`}>
+                        <>
+                        <div  className={`mt-1 py-3 rounded bg-[#E3E3E3]`}>
                           <div className="px-3">
                             <span className="text-[18px] w-[400px]"> {checkItem.title} </span>
                           </div>
@@ -301,6 +303,19 @@ const Close = () => {
                             </div>
                           </div>
                         </div>
+                         {/* Fixed conditional rendering using && operator */}
+                         {checkItem.tempData &&
+                            checkItem.tempData.map((Data, tempIndex) => (
+                              <div className="flex justify-between my-3 ml-5 py-2 rounded items-center bg-pdfGray" key={tempIndex}>
+                                <div className="px-3">
+                                  <span className="text-[18px] w-[400px]">{Data.name}</span>
+                                </div>
+                                <div className="px-3">
+                                  <span className="text-[18px] w-[400px]">{Data.temp}</span>
+                                </div>
+                              </div>
+                            ))}
+                        </>
                       )
                     }
                     if(checkItem.type == "re_time"){

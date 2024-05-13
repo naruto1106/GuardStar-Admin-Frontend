@@ -33,8 +33,8 @@ const EditChecklist = () => {
   useEffect(()=> {
     const fetchData = async() => {
       const response = await dispatch(getEditChecklist(id));
-      const data=response[0].checklist;
       if(response) {
+        let data=response[0].checklist;
         setChecklist(data);
       }
     }
