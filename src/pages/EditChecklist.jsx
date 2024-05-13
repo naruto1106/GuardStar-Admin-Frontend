@@ -55,11 +55,20 @@ const EditChecklist = () => {
       if(switch3) {
         type = "re_time";
       } 
-      const data={
+      let data={
         'type'    : type,
         'title'   : title,
         'content' : content,
         'status'  : false
+      }
+      if(type == "re_temp"){
+        data = {
+          'type'    : type,
+          'title'   : title,
+          'content' : content,
+          'status'  : false,
+          'tempData': []
+        }
       }
     setChecklist([...checklist, data])
     setTitle("");
@@ -85,7 +94,7 @@ const EditChecklist = () => {
       'type'    : 'section',
       'title'   : "",
       'content' : title,
-      'status'  : false
+      'status'  : true,
     }
     setChecklist([...checklist, data]);
   }

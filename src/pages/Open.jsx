@@ -9,7 +9,7 @@ import { Switch } from '@headlessui/react';
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import moment from 'moment';
-import { getEditChecklist, getOpeninglist, updateChecklistStatus } from "../action/checklist";
+import { getEditChecklist, getOpeninglist, updateChecklistStatus, getSensorData } from "../action/checklist";
 import { getOpeningChecklist } from "../reducer/ChecklistSlice";
 
 const Open = () => {
@@ -20,9 +20,11 @@ const Open = () => {
   const [openingList, setOpeningList] = useState([]);
   const [visibleItemIndex, setVisibleItemIndex] = useState(null);
   const [userId, setUserId] = useState('');
+  const [sensorData, setSensorData] = useState([]);
 
    useEffect(()  =>   { 
     if (getOpeningCheck) {
+           // Update tempData for items with type "re_temp"
       setOpeningList(getOpeningCheck);
       const initialCheckedList = getOpeningCheck.filter(item => item.status).map(item => item._id);
       setCheckedList(initialCheckedList);
@@ -34,6 +36,41 @@ const Open = () => {
     setUserId(userData._id)
     dispatch(getOpeninglist(userData._id));
   }, [])
+
+  //get the sensor data by cron
+  useEffect(() => {
+    const fetchSensorData =async () => {
+        const userData = JSON.parse(localStorage.getItem('user'));
+        const data =await dispatch(getSensorData(userData._id));
+        setSensorData(data);
+        if(openingList){
+          const updatedItems = openingList.map(item => {
+            if (item.checklist.some(checkItem => checkItem.type === 're_temp')) {
+              return {
+              ...item,
+                checklist: item.checklist.map(checkItem => {
+                  if (checkItem.type === 're_temp') {
+                    return {
+                    ...checkItem,
+                      tempData: data, // Directly assign the filtered sensor data
+                    };
+                  }
+                  return checkItem; // Return the checkItem unchanged if it's not of type 're_temp'
+                }),
+              };
+            }
+            return item;
+          });
+          setOpeningList(updatedItems);
+        }
+        console.log(data, 'sensorData')
+    }
+    fetchSensorData();
+    // Fetch sensor data every 15 seconds
+    const interval = setInterval(fetchSensorData, 30000);
+;      // Clear the interval when the component unmounts
+    return () => clearInterval(interval);
+}, [])
 
 
   const handleCheckboxChange = (id, Index) => {
@@ -213,8 +250,8 @@ const Open = () => {
         </div>
         <div>
           {
-            openingList && openingList.length>0 ? ( openingList.map((item) =>(
-              <ButtonCheck handleClick={() => handleEditChange(item._id)} color="secondary" variant="secondary" label="Edit checklist" />
+            openingList && openingList.length>0 ? ( openingList.map((item, index) =>(
+              <ButtonCheck key={index} handleClick={() => handleEditChange(item._id)} color="secondary" variant="secondary" label="Edit checklist" />
             ))) : (
               <ButtonCheck handleClick={() => handleAdd()} color="secondary" variant="secondary" label="Add" />
             )
