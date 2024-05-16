@@ -12,6 +12,7 @@ import moment from 'moment';
 import { getEditChecklist, getOpeninglist, updateChecklistStatus, getSensorData } from "../action/checklist";
 import { getOpeningChecklist } from "../reducer/ChecklistSlice";
 
+
 const Open = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -20,6 +21,7 @@ const Open = () => {
   const [openingList, setOpeningList] = useState([]);
   const [visibleItemIndex, setVisibleItemIndex] = useState(null);
   const [userId, setUserId] = useState('');
+  const [checkOpening, setCheckOpening] = useState(false);
 
    useEffect(()  =>   { 
     if (getOpeningCheck) {
@@ -35,6 +37,17 @@ const Open = () => {
     setUserId(userData._id)
     dispatch(getOpeninglist(userData._id));
   }, [])
+
+  useEffect(() => {
+    openingStatus(openingList);
+  },[openingList])
+
+  const openingStatus = (data) => {
+    if(data && data.length > 0) {
+      const allStatusTrue = data[0].checklist.every(item => item.status === true);
+      setCheckOpening(allStatusTrue);
+    }
+  }  
 
   const handleCheckboxChange = (id, Index) => {
     const newCheckedList = [...checkedList];
@@ -174,6 +187,7 @@ const Open = () => {
       "checklist": item.checklist,
     }
     dispatch(updateChecklistStatus(data))
+    
   }
   const handleTimeChange = (id, index, subIndex, checkStatus) => {
     const updatedOpeningList = openingList.map(item => ({ ...item }));
@@ -193,11 +207,6 @@ const Open = () => {
     }
     dispatch(updateChecklistStatus(data))
   }
-
-  
-
-
-
 
   const handleEditChange = async (id) => {
     navigate(`/editchecklist/open/${id}`)
@@ -373,6 +382,13 @@ const Open = () => {
           ))
         }
       </div>
+      {
+        checkOpening && (
+          <div className="w-[250px] fixed top-0 left-[50%] text-center text-white bg-[#7BBB3B] p-3 mx-auto text-[20px]" style={{ top: 'calc(100vh - 90px)' }}>
+            <span>All checks complete</span>
+          </div>
+        )
+      }
     </>
   )
 }

@@ -51,7 +51,7 @@ const MainLayout = (props) => {
                     <img src={logoImage} alt="logoImage" />
                 </div>
             </div>
-            <div className="flex-1 p-[70px]">
+            <div className="flex-1 p-[70px] relative">
                 {children}
             </div>
 

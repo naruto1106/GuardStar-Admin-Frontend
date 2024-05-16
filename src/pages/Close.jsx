@@ -6,7 +6,7 @@ import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import moment from 'moment';
-import { getClosinglist, updateChecklistStatus } from "../action/checklist";
+import { getClosinglist, updateChecklistStatus, getClosingCheckStatus } from "../action/checklist";
 import { getClosingChecklist } from "../reducer/ChecklistSlice";
 import { FaEdit } from "react-icons/fa";
 import { Switch } from '@headlessui/react';
@@ -19,7 +19,8 @@ const Close = () => {
   const [closingList, setClosingList] = useState([]);
   const [visibleItemIndex, setVisibleItemIndex] = useState(null);
   const [userId, setUserId] = useState('');
-console.log(closingList,'closinglist');
+  const [checkClosing, setCheckClosing] = useState(false);
+
   const handleAdd = () => {
     navigate('/addchecklist?checkType=close')
   }
@@ -36,6 +37,17 @@ console.log(closingList,'closinglist');
     setUserId(userData._id)
     dispatch(getClosinglist(userData._id));
   }, [])
+
+  useEffect(() => {
+    closingStatus(closingList);
+  },[closingList])
+
+  const closingStatus = (data) => {
+    if(data && data.length>0) {
+      const allStatusTrue = data[0].checklist.every(item => item.status === true);
+      setCheckClosing(allStatusTrue);
+    }
+  }
 
   const handleCheckboxChange = (id, Index) => {
     const newCheckedList = [...checkedList];
@@ -346,6 +358,13 @@ console.log(closingList,'closinglist');
           )
         }
       </div>
+      {
+        checkClosing && (
+          <div className="w-[250px] fixed top-0 left-[50%] text-center text-white bg-[#7BBB3B] p-3 mx-auto text-[20px]" style={{ top: 'calc(100vh - 90px)' }}>
+            <span>All checks complete</span>
+          </div>
+        )
+      }
     </>
 
   )
