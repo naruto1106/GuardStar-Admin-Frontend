@@ -2,6 +2,33 @@ import { APIURL } from './constant';
 import { toast } from 'react-toastify';
 import { setOpeningChecklist } from '../reducer/ChecklistSlice';
 
+export const getReportHistories = (userId) => {
+  return async () => {
+    try {
+      // Make API request to register the user
+      const response = await fetch(
+        `${APIURL}/app/getReportHistory?userId=${userId}`,
+        {
+          method: "GET",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          
+        }
+      );
+     
+      if (!response.ok) {
+        throw new Error('Failed to categories');
+      }
+      const data = await response.json();
+      // console.log(data, 'cron data');
+      return data;
+    } catch (error) {
+      // Dispatch failure action if there's an error
+      console.log(error, 'error');
+    }
+  }
+}
 export const getSensorData = (userId) => {
   return async () => {
     try {
