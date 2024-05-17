@@ -17,6 +17,7 @@ const TempDetail = () => {
     const [beep, setBeep] = useState(false);
     const [sensorData, setSensorData] = useState([]);
     const [range, setRange] = useState([10, 20]);
+    const [name, setName] = useState("");
 
     //  get the sensor data by cron
     useEffect(() => {
@@ -26,6 +27,7 @@ const TempDetail = () => {
                 setSensorData(data);
                 setEnabled(data[0].openAlarmTemperature);
                 const rangeVal = [data[0].lowTemperature1, data[0].lowTemperature2];
+                setName(data[0].name);
                 setRange(rangeVal);
             }
 
@@ -51,7 +53,8 @@ const TempDetail = () => {
             openAlarmTemperature: enabled,
             lowTemperature1: range[0],
             lowTemperature2: range[1],
-            id : id
+            id : id,
+            name : name,
         }
         const response =await dispatch(updateSensor(data))
         if(response){
