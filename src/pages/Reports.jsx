@@ -155,7 +155,7 @@ const Reports = () => {
                 ) : (
                   <div className="cursor-pointer flex items-center text-[18px]">
                     <Icon icon="ic:sharp-download" />
-                    <span>Download</span>
+                    <span>Create Report</span>
                   </div>
                 )
               }
