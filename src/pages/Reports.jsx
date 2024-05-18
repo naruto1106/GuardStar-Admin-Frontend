@@ -153,7 +153,7 @@ const Reports = () => {
                 loading ? (
                   <Icon icon="eos-icons:loading" className="text-[24px]" />
                 ) : (
-                  <div className="cursor-pointer flex items-center text-[18px]" onClick={download}>
+                  <div className="cursor-pointer flex items-center text-[18px]">
                     <Icon icon="ic:sharp-download" />
                     <span>Download</span>
                   </div>
