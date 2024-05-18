@@ -28,11 +28,11 @@ const Reports = () => {
 
 
   const download = async () => {
+    setLoading(true);
     if (startDate > endDate) {
       toast.error("End Date must be greater than Start Date");
       return;
     }
-    setLoading(true);
     const data = {
       "startDate": startDate,
       "endDate": endDate,
@@ -45,11 +45,21 @@ const Reports = () => {
     // Create a Blob from the base64 string
     const filename = 'Report.pdf';
     const blob = new Blob([response], { type: 'application/pdf' });
-    const link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    link.download = filename;
-    link.click();
-    link.remove();
+    // const link = document.createElement('a');
+    // link.href = window.URL.createObjectURL(blob);
+    // link.download = filename;
+    // link.click();
+    // link.remove();
+         // Create an object URL from the Blob
+         const url = window.URL.createObjectURL(blob);
+
+         // Open the PDF in a new tab
+         window.open(url, '_blank');
+ 
+         // Revoke the object URL after a delay to release memory
+         setTimeout(() => {
+             window.URL.revokeObjectURL(url);
+         }, 1000 * 60); // 1 minute delay
 
     console.log(response, 'kkk');
 
@@ -73,11 +83,21 @@ const Reports = () => {
       // Create a Blob from the base64 string
       const filename = 'Report.pdf';
       const blob = new Blob([response], { type: 'application/pdf' });
-      const link = document.createElement('a');
-      link.href = window.URL.createObjectURL(blob);
-      link.download = filename;
-      link.click();
-      link.remove();
+      // const link = document.createElement('a');
+      // link.href = window.URL.createObjectURL(blob);
+      // link.download = filename;
+      // link.click();
+      // link.remove();
+       // Create an object URL from the Blob
+       const url = window.URL.createObjectURL(blob);
+
+       // Open the PDF in a new tab
+       window.open(url, '_blank');
+
+       // Revoke the object URL after a delay to release memory
+       setTimeout(() => {
+           window.URL.revokeObjectURL(url);
+       }, 1000 * 60); // 1 minute delay
     } finally {
       setLoadingStates(prevState => ({
         ...prevState,
