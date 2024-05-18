@@ -8,7 +8,7 @@ import { getSettingData, updateSetting } from "../action/checklist";
 const Settings = () => {
     const dispatch = useDispatch();
     // const [timezone, setTimeZone] = useState("");
-    const [metric, setMetric] = useState("");
+    const [premisesName, setPremisesName] = useState("");
     const [userId, setUserId] = useState("");
     const [adminEmail, setAdminEmail] = useState("");
     const [adminPhone, setAdminPhone] = useState("");
@@ -74,6 +74,7 @@ const Settings = () => {
                 setOpeningTime(response.openingTime);
                 setClosingTime(response.closingTime);
                 setIncidentTime(response.incidentTime);
+                setPremisesName(response.premisesName);
             }
         }
         SettingData();
@@ -92,7 +93,8 @@ const Settings = () => {
             'incidentTime': incidentTime,
             'adminEmail': adminEmail,
             'adminPhone': adminPhone,
-            'userId': userId
+            'userId': userId,
+            'premisesName': premisesName
         }
         dispatch(updateSetting(data));
     }
@@ -113,22 +115,22 @@ const Settings = () => {
                         />
 
                     </div>
-                </div>
+                </div> */}
                 <div className="w-full flex items-center p-3">
                     <label htmlFor="metric" className="w-[200px] uppercase  font-medium leading-6 text-gray-900">
-                        Metric
+                        Premises Name
                     </label>
                     <div className="mt-2">
                         <input
                             type="text"
-                            name="metric"
-                            id="metric"
-                            value={metric}
-                            onChange={(e) => setMetric(e.target.value)}
+                            name="premises_name"
+                            id="premises_name"
+                            value={premisesName}
+                            onChange={(e) => setPremisesName(e.target.value)}
                             className="w-[450px] block rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
                     </div>
-                </div> */}
+                </div>
                 <div className="w-full flex items-center p-3">
                     <label htmlFor="email" className="w-[200px] uppercase  font-medium leading-6 text-gray-900">
                         Admin Alerts
