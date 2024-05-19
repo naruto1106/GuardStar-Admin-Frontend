@@ -55,11 +55,10 @@ const Reports = () => {
 
          // Open the PDF in a new tab
          window.open(url, '_blank');
- 
-         // Revoke the object URL after a delay to release memory
-        //  setTimeout(() => {
-        //      window.URL.revokeObjectURL(url);
-        //  }, 1000 * 60); // 1 minute delay
+          
+         setTimeout(() => {
+             window.URL.revokeObjectURL(url);
+         }, 1000 * 60); // 1 minute delay
 
     console.log(response, 'kkk');
 
