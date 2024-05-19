@@ -27,42 +27,95 @@ const Reports = () => {
   }, [loading])
 
 
+  // const download = async () => {
+  //   setLoading(true);
+  //   if (startDate > endDate) {
+  //     toast.error("End Date must be greater than Start Date");
+  //     return;
+  //   }
+  //   const data = {
+  //     "startDate": startDate,
+  //     "endDate": endDate,
+  //     "userId": userId,
+  //     "type": "new"
+  //   }
+
+  //   const response = await dispatch(getDownload(data));
+  //   setLoading(false);
+  //   // Create a Blob from the base64 string
+  //   const filename = 'Report.pdf';
+  //   const blob = new Blob([response], { type: 'application/pdf' });
+  //   // const link = document.createElement('a');
+  //   // link.href = window.URL.createObjectURL(blob);
+  //   // link.download = filename;
+  //   // link.click();
+  //   // link.remove();
+  //        // Create an object URL from the Blob
+  //        const url = window.URL.createObjectURL(blob);
+
+  //        // Open the PDF in a new tab
+  //        window.open(url, '_blank');
+          
+  //        setTimeout(() => {
+  //            window.URL.revokeObjectURL(url);
+  //        }, 1000 * 60); // 1 minute delay
+
+  //   console.log(response, 'kkk');
+
+  // }
+
   const download = async () => {
     setLoading(true);
+    
     if (startDate > endDate) {
-      toast.error("End Date must be greater than Start Date");
-      return;
+        toast.error("End Date must be greater than Start Date");
+        setLoading(false);  // Ensure to reset loading state in case of error
+        return;
     }
+
     const data = {
-      "startDate": startDate,
-      "endDate": endDate,
-      "userId": userId,
-      "type": "new"
+        "startDate": startDate,
+        "endDate": endDate,
+        "userId": userId,
+        "type": "new"
     }
 
-    const response = await dispatch(getDownload(data));
-    setLoading(false);
-    // Create a Blob from the base64 string
-    const filename = 'Report.pdf';
-    const blob = new Blob([response], { type: 'application/pdf' });
-    // const link = document.createElement('a');
-    // link.href = window.URL.createObjectURL(blob);
-    // link.download = filename;
-    // link.click();
-    // link.remove();
-         // Create an object URL from the Blob
-         const url = window.URL.createObjectURL(blob);
+    // Open a new window synchronously
+    const newWindow = window.open('', '_blank');
+    if (!newWindow) {
+        toast.error("Please allow popups for this website");
+        setLoading(false);
+        return;
+    }
 
-         // Open the PDF in a new tab
-         window.open(url, '_blank');
-          
-         setTimeout(() => {
-             window.URL.revokeObjectURL(url);
-         }, 1000 * 60); // 1 minute delay
+    try {
+        const response = await dispatch(getDownload(data));
+        
+        // Create a Blob from the base64 string
+        const filename = 'Report.pdf';
+        const blob = new Blob([response], { type: 'application/pdf' });
 
-    console.log(response, 'kkk');
+        // Create an object URL from the Blob
+        const url = window.URL.createObjectURL(blob);
 
-  }
+        // Update the content of the newly opened window with the Blob URL
+        newWindow.location.href = url;
+
+        // Revoke the object URL after a delay
+        setTimeout(() => {
+            window.URL.revokeObjectURL(url);
+        }, 1000 * 60); // 1 minute delay
+
+        console.log(response, 'kkk');
+    } catch (error) {
+        console.error('Download failed', error);
+        newWindow.close();  // Close the new window in case of error
+        toast.error("Download failed. Please try again.");
+    } finally {
+        setLoading(false);
+    }
+}
+
 
   const downloadHistory = async (start, end, user, id) => {
     setLoadingStates(prevState => ({
