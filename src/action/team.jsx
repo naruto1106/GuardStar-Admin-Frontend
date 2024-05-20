@@ -57,6 +57,59 @@ export const createTeam = (createData) => {
       }
     }
 }
+export const updateTeam = (updateData) => {
+  return async () => {
+    try {
+      // Make API request to register the user
+      const response = await fetch(
+        `${APIURL}/app/users/update`,
+        {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updateData)
+        }
+      );
+      if (!response.ok) {
+        throw new Error('Failed to register');
+      }
+      const data = await response.json();
+      // Dispatch success action if the request is successful
+      toast.success('Successfully updated!');
+      return data;
+
+    } catch (error) {
+      // Dispatch failure action if there's an error
+      toast.error("Failed created");
+    }
+  }
+}
+export const getEditTeam = (id) => {
+  return async () => {
+    try {
+      // Make API request to register the user
+      const response = await fetch(
+        `${APIURL}/app/users/getEditTeam?id=${id}`,
+        {
+          method: "GET",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+     
+      if (!response.ok) {
+        throw new Error('Failed to categories');
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      // Dispatch failure action if there's an error
+      console.log(error, 'error');
+    }
+  }
+}
 
 export const SignIn = (loginData) => {
   return async (dispatch) => {

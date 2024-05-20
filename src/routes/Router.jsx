@@ -20,6 +20,7 @@ import { useState, useEffect } from "react";
 import EditChecklist from "../pages/EditChecklist";
 import TempDetail from "../pages/TempDetail";
 import Register from "../pages/register";
+import EditTeam from "../pages/EditTeam";
 
 
 const Router = () => {
@@ -140,6 +141,16 @@ const Router = () => {
                     token ? (
                         <MainLayout layout="team">
                             <Team />
+                        </MainLayout>
+                    ) : (<Navigate to="/login" />)
+                }
+            />
+            <Route
+                path="/editteam/:id"
+                element={
+                    token ? (
+                        <MainLayout layout="team">
+                            <EditTeam />
                         </MainLayout>
                     ) : (<Navigate to="/login" />)
                 }

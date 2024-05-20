@@ -24,6 +24,9 @@ const Team = () => {
     const GotoAddTeam = () => {
         navigate("/addteam");
     }
+    const handleEditChange = async (id) => {
+        navigate(`/editteam/${id}`)
+      }
     return (
         <>
             <h1 className="text-[28px] uppercase">Team</h1>
@@ -31,19 +34,19 @@ const Team = () => {
                 <thead>
                     <tr>
                         <th className="py-3 uppercase w-1/4 text-left">Name</th>
-                        <th className="py-3 uppercase w-1/4 text-center">Role</th>
                         <th className="py-3 uppercase w-1/4 ">Email Address</th>
                         <th className="py-3 uppercase w-1/4 ">Training</th>
+                        <th className="py-3 uppercase w-1/4 text-center">UserLevel</th>
                     </tr>
                 </thead>
                 <tbody>
                     {
                         team.length > 0 && team.map((item, index) => (
-                            <tr key={index}>
+                            <tr key={index} className="cursor-pointer" onClick={() => handleEditChange(item._id)}>
                                 <td className="p-4 pl-[0px] text-left"> {item.name} </td>
-                                <td className="p-4  text-center"> {item.role} </td>
                                 <td className="p-4  text-center"> {item.email} </td>
                                 <td className="p-4  text-center"> {item.trainingLevel} </td>
+                                <td className="p-4  text-center"> {item.userLevel} </td>
                             </tr>
                         ))
                     }
