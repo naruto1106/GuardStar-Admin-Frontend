@@ -28,6 +28,8 @@ const EditChecklist = () => {
   const [switch1, setSwitch1]=useState(false);
   const [switch2, setSwitch2]=useState(false);
   const [switch3, setSwitch3]=useState(false);
+  const [userId, setUserId] = useState('');
+
   
   console.log('response', checklist);
   useEffect(()=> {
@@ -39,6 +41,11 @@ const EditChecklist = () => {
       }
     }
     fetchData()
+  }, [])
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem('user'));
+    setUserId(userData._id)
   }, [])
 
   const addChecklist=()=>{
@@ -200,6 +207,7 @@ const EditChecklist = () => {
     const data = {
       'checklist': checklist,
       'id': id,
+      'userId': userId,
     }
     const response = await dispatch(updateChecklist(data));
     if (response) {
