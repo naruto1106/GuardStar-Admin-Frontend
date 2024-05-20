@@ -130,7 +130,7 @@ const Close = () => {
   };
 
   const handleEditChange = async (id) => {
-    console.log(id,'id'); return;
+    console.log(id,'id');
     navigate(`/editchecklist/close/${id}`)
   }
 
